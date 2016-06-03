@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Collections.Generic;
 using AMVTheaterAssistant.Properties;
@@ -119,11 +119,11 @@ namespace AMVTheaterAssistant
                     mpchc.IsEnabled = true;
                     webserver.IsEnabled = true;
                 }
-                else
-                {
-                    IPAddress.Text = "MPC-HC Not Detected";
-                }
-            }
+
+
+
+
+
 
             MPCHC MPC = new MPCHC();
             bool mpcWebRunning = MPC.DetectWebServer();
@@ -155,6 +155,11 @@ namespace AMVTheaterAssistant
             }
             mpcSettings.IsEnabled = true;
 
+            }
+            else
+            {
+                IPAddress.Text = "MPC-HC Not Detected";
+            }
 
         }
 
@@ -501,4 +506,5 @@ namespace AMVTheaterAssistant
             
         }
     }
+
 }
