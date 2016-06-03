@@ -16,4 +16,5 @@ User Saved Settings Information:
 Settings are currently saved using the default method provided by Visual Studio, which means they are saved and loaded based on the location of the exe file.  A new settings file is generated for each location it is executed from in a subfolder of the folder mentioned above.  This is something I plan to change in a future release.
 
 Additional Information:
+
 A copy of jQuery is included in the application and it follows the same MIT license that this software is distributed under, pelease refer to the license document for more information.
