@@ -9,7 +9,7 @@ Features:
 
 General Information:
 
-This application is currently a standalone EXE file that will run from any location.  Settings and the generated website for use with the MPC-HC web server are located in the C:\Users\<current-user>\AppData\Local\AMVTheaterAssistant folder for the current user.
+This application is currently a standalone EXE file that will run from any location.  Settings and the generated website for use with the MPC-HC web server are located in the C:\Users\(current-user)\AppData\Local\AMVTheaterAssistant folder for the current user.
 
 User Saved Settings Information:
 
@@ -17,4 +17,4 @@ Settings are currently saved using the default method provided by Visual Studio,
 
 Additional Information:
 
-A copy of jQuery is included in the application and it follows the same MIT license that this software is distributed under, pelease refer to the license document for more information.
+A copy of jQuery is included in the application and it follows the same MIT license that this software is distributed under, please refer to the license document for more information.
