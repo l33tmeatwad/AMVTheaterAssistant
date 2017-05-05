@@ -184,22 +184,19 @@ namespace AMVTheaterAssistant
 
         private void MonitorCount()
         {
-            int mcount = System.Windows.Forms.SystemInformation.MonitorCount;
-            int mprevious = Convert.ToInt16(Settings.Default["defaultPlayMonitor"]);
-            for (int i = 0; i < mcount; i++)
+            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
             {
-                mpcPlayback.Items.Add("Monitor " + (i + 1).ToString());
+                mpcPlayback.Items.Add(screen.DeviceName.Replace(@"\\.\DISPLAY","Monitor "));
             }
-            if (mcount >= mprevious)
+            int screennum = mpcPlayback.Items.IndexOf("Monitor " + Settings.Default["defaultPlayMonitor"].ToString());
+            if (screennum >= 0)
             {
-                mpcPlayback.SelectedIndex = mprevious - 1;
+                mpcPlayback.SelectedIndex = screennum;
             }
             else
             {
-                mpcPlayback.SelectedIndex = mcount - 1;
-            }
-
-
+                mpcPlayback.SelectedIndex = 0;
+            }  
         }
 
         private void LoadLogos()
@@ -335,7 +332,7 @@ namespace AMVTheaterAssistant
 
         private void mpcSettigns_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default["defaultPlayMonitor"] = mpcPlayback.SelectedIndex + 1;
+            Settings.Default["defaultPlayMonitor"] = Convert.ToInt32(mpcPlayback.Items[mpcPlayback.SelectedIndex].ToString().Replace("Monitor ",""));
             Settings.Default["mpcStartFull"] = startfull.IsChecked;
             Settings.Default["mpcEnableCustom"] = enablecustom.IsChecked;
             if (mpcWebPort.Text != "") { Settings.Default["mpcWebPort"] = mpcWebPort.Text; }
