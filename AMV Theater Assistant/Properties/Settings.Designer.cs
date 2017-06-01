@@ -430,5 +430,17 @@ namespace AMVTheaterAssistant.Properties {
                 this["upcoming2SizeType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int defaultInfoScreen {
+            get {
+                return ((int)(this["defaultInfoScreen"]));
+            }
+            set {
+                this["defaultInfoScreen"] = value;
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Drawing.Text;
+using System.Text;
 
 namespace AMVTheaterAssistant
 {
@@ -17,10 +18,13 @@ namespace AMVTheaterAssistant
         public void GenerateWebsite()
         {
             string sitefolder = Settings.Default["siteLocation"].ToString();
+            if (File.Exists(sitefolder + @"\variables.html"))
+            {
+                File.Delete(sitefolder + @"\variables.html");
+            }
             Directory.CreateDirectory(sitefolder + @"\fonts");
             Directory.CreateDirectory(sitefolder + @"\logos");
             File.WriteAllText(sitefolder + @"\index.html", Properties.Resources.index_html);
-            System.IO.File.WriteAllText(sitefolder + @"\variables.html", "[file]");
             string javafolder = sitefolder + @"\javascript";
             string imagesfolder = sitefolder + @"\images";
             Directory.CreateDirectory(javafolder);
@@ -265,7 +269,10 @@ namespace AMVTheaterAssistant
                 if (ProcessName.CompareTo("mpc-hc64") == 0 || ProcessName.CompareTo("mpc-hc") == 0)
                 {
 
-                    if (command > 2) { SendMessage(process.MainWindowHandle, 0x111, command, 0); }
+                    if (command > 2)
+                    {
+                        SendMessage(process.MainWindowHandle, 0x111, command, 0);
+                    }
                     if (command == 2)
                     {
                         DialogResult dialogResult = MessageBox.Show(ProcessName.ToUpper() + " needs to be restarted for changes to apply, would you like to do that now?", "Restart MPC-HC", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -299,7 +306,6 @@ namespace AMVTheaterAssistant
             }
             return mpcrunning;
         }
-
 
         public bool DetectWebServer()
         {

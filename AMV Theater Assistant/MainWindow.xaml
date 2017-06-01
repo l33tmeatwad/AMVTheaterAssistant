@@ -8,132 +8,124 @@
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
         Topmost="False"
-        Title="AMV Theater Assistant" Height="320" Width="570" Loaded="Window_Loaded">
+        Closing="MainWindow_Closing"
+        Title="AMV Theater Assistant" Height="340" Width="570" Loaded="Window_Loaded">
     <Grid>
         <TabControl x:Name="mainTabs" Margin="0,0,0,0">
             <TabItem Header="MPC-HC">
                 <Grid Background="#FFE5E5E5">
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="10,19,351,0" VerticalAlignment="Top" Opacity="0.3"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="59" Margin="10,19,10,0" VerticalAlignment="Top" Opacity="0.3"/>
                     <TextBlock x:Name="mpcPlayer" Margin="20,10,0,0" TextWrapping="NoWrap" Text="Playback Controls" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="94" Background="#FFE5E5E5"/>
-                    <Button x:Name="previous" Uid="921" HorizontalAlignment="Left" Margin="20,29,0,0" VerticalAlignment="Top" Width="32" Click="mpcControls_Click" Height="20" IsEnabled="False">
+                    <Button x:Name="previous" Uid="921" HorizontalAlignment="Left" Margin="20,29,0,0" VerticalAlignment="Top" Width="65" Click="mpcControls_Click" Height="40" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 2,0 2,5 10,0 10,5 18,0 18,10 10,5 10,10 2,5 2,10 0,10">
                         </Polygon>
                     </Button>
-                    <Button x:Name="play" Uid="887" Margin="57,29,456,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False">
-                        <Polygon Stretch="None"  Fill="Black" Points="1,0 9,5 1,10">
+                    <Button x:Name="play" Uid="887" Margin="94,29,372,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="40" IsEnabled="False">
+                        <Polygon Stretch="None"  Fill="Black" Points="0,0 12,6 0,12">
                         </Polygon>
                     </Button>
-                    <Button x:Name="pause" Uid="888" HorizontalAlignment="Right" Margin="0,29,427,0" VerticalAlignment="Top" Width="24" Click="mpcControls_Click" Height="20" IsEnabled="False">
+                    <Button x:Name="pause" Uid="888" HorizontalAlignment="Right" Margin="0,29,314,0" VerticalAlignment="Top" Width="49" Click="mpcControls_Click" Height="40" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 0,10 2,10 2,0 4,0 4,10 6,10 6,0">
                         </Polygon>
                     </Button>
-                    <Button x:Name="stop" Uid="890" HorizontalAlignment="Right" Margin="0,29,398,0" VerticalAlignment="Top" Width="24" Click="mpcControls_Click" Height="20" IsEnabled="False">
+                    <Button x:Name="stop" Uid="890" HorizontalAlignment="Right" Margin="0,29,256,0" VerticalAlignment="Top" Width="50" Click="mpcControls_Click" Height="40" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 0,10 10,10 10,0">
                         </Polygon>
                     </Button>
-                    <Button x:Name="next" Uid="922" Margin="0,29,361,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="32">
+                    <Button x:Name="next" Uid="922" Margin="0,29,183,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="40" IsEnabled="False" HorizontalAlignment="Right" Width="65">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 8,5 8,0 16,5 16,0 18,0 18,10 16,10 16,5 8,10 8,5 0,10">
                         </Polygon>
                     </Button>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,19,249,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="92"/>
-                    <TextBlock x:Name="mpcStep" Margin="0,10,271,0" TextWrapping="NoWrap" Text="Frame Step" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="60"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,29,22,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="150"/>
+                    <TextBlock x:Name="volume" Margin="0,20,78,0" TextWrapping="NoWrap" Text="Volume Control" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Right" Width="84" Background="#FFE5E5E5"/>
+                    <Button x:Name="voldown" Uid="908" Margin="0,39,132,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="30">
+                        <Polygon Stretch="None"  Fill="Black" Points="0,0 12,0 12,2 0,2">
+                        </Polygon>
+                    </Button>
+                    <Button x:Name="mute" Content="MUTE" FontWeight="Bold" Uid="909" Margin="0,39,67,0" VerticalAlignment="Top" Click="mpcControls_Click" IsEnabled="False" HorizontalAlignment="Right" Width="60"/>
+                    <Button x:Name="volup" Uid="907" Margin="0,39,32,0" Height="20" Width="30" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" IsEnabled="False">
+                        <Polygon Stretch="None"  Fill="Black" Points="5,0,5,5,0,5,0,7,5,7,5,12,7,12,7,7,12,7,12,5,7,5,7,0">
+                        </Polygon>
+                    </Button>
 
-                    <Button x:Name="stepback" Uid="892" Margin="0,29,297,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="34">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="11,90,351,0" VerticalAlignment="Top" Opacity="0.3"/>
+                    <TextBlock x:Name="fadeOut" Margin="20,81,0,0" TextWrapping="NoWrap" Text="Fade Video" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Left" Width="59"/>
+                    <TextBlock x:Name="titleFadeVideo" Margin="20,101,0,0" TextWrapping="NoWrap" Text="Time (ms):" VerticalAlignment="Top" HorizontalAlignment="Left" Width="54"/>
+                    <TextBox x:Name="fadeVideoTime" Height="20" Margin="79,100,429,0" TextWrapping="NoWrap" Text="1200" VerticalAlignment="Top" KeyDown="numTextBox_KeyDown"/>
+                    <Button x:Name="fadeVideo" Content="Fade Out" Margin="0,100,362,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="62" Click="fadeVideo_Click"/>
+
+
+
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,90,249,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="92"/>
+                    <TextBlock x:Name="mpcStep" Margin="0,81,271,0" TextWrapping="NoWrap" Text="Frame Step" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="60"/>
+
+                    <Button x:Name="stepback" Uid="892" Margin="0,100,297,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="34">
                         <Polygon Stretch="None"  Fill="Black" Points="0,5 8,0 8,10 10,10 10,0 12,0 12,10 8,10 0,5">
                         </Polygon>
                     </Button>
 
-                    <Button x:Name="stepforward" Uid="891" Margin="0,29,258,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="34">
+                    <Button x:Name="stepforward" Uid="891" Margin="0,100,258,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="34">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 0,10 2,10 2,0 4,0 12,5 4,10 4,0">
                         </Polygon>
                     </Button>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,19,10,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="229"/>
-                    <TextBlock x:Name="mpcSeek" Margin="0,10,156,0" TextWrapping="NoWrap" Text="Seek Controls" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="73"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,90,10,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="229"/>
+                    <TextBlock x:Name="mpcSeek" Margin="0,81,156,0" TextWrapping="NoWrap" Text="Seek Controls" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="73"/>
 
-                    <Button x:Name="skipback3" Uid="903" Margin="0,29,191,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="38">
+                    <Button x:Name="skipback3" Uid="903" Margin="0,100,191,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Right" Width="38">
                         <Polygon Stretch="None"  Fill="Black" Points="0,5 8,0 8,5 16,0 16,5 24,0 24,10 16,5 16,10 8,5 8,10 0,5">
                         </Polygon>
                     </Button>
-                    <Button x:Name="skipback2" Uid="901" HorizontalAlignment="Right" Margin="0,29,156,0" VerticalAlignment="Top" Width="30" Click="mpcControls_Click" Height="20" IsEnabled="False">
+                    <Button x:Name="skipback2" Uid="901" HorizontalAlignment="Right" Margin="0,100,156,0" VerticalAlignment="Top" Width="30" Click="mpcControls_Click" Height="20" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,5 8,0 8,5 16,0 16,10 8,5 8,10 0,5">
                         </Polygon>
                     </Button>
-                    <Button x:Name="skipback1" Uid="899" HorizontalAlignment="Right" Margin="0,29,127,0" VerticalAlignment="Top" Width="24" Click="mpcControls_Click" Height="20" IsEnabled="False">
+                    <Button x:Name="skipback1" Uid="899" HorizontalAlignment="Right" Margin="0,100,127,0" VerticalAlignment="Top" Width="24" Click="mpcControls_Click" Height="20" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,5 8,0 8,10 0,5">
                         </Polygon>
                     </Button>
 
-                    <Button x:Name="skipforward1" Uid="900" HorizontalAlignment="Right" Margin="0,29,98,0" VerticalAlignment="Top" Width="24" Click="mpcControls_Click" Height="20" IsEnabled="False">
+                    <Button x:Name="skipforward1" Uid="900" HorizontalAlignment="Right" Margin="0,100,98,0" VerticalAlignment="Top" Width="24" Click="mpcControls_Click" Height="20" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 8,5 0,10">
                         </Polygon>
                     </Button>
-                    <Button x:Name="skipforward2" Uid="902" Margin="0,29,63,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" HorizontalAlignment="Right" Width="30" IsEnabled="False">
+                    <Button x:Name="skipforward2" Uid="902" Margin="0,100,63,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" HorizontalAlignment="Right" Width="30" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 8,5 8,0 16,5 8,10 8,5 0,10">
                         </Polygon>
                     </Button>
-                    <Button x:Name="skipforward3" Uid="904" Margin="0,29,20,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" HorizontalAlignment="Right" Width="38" IsEnabled="False">
+                    <Button x:Name="skipforward3" Uid="904" Margin="0,100,20,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" HorizontalAlignment="Right" Width="38" IsEnabled="False">
                         <Polygon Stretch="None"  Fill="Black" Points="0,0 8,5 8,0 16,5 16,0 24,5 16,10 16,5 8,10 8,5 0,10">
                         </Polygon>
                     </Button>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="10,70,0,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Left" Width="150"/>
-                    <TextBlock x:Name="volume" Margin="20,61,0,0" TextWrapping="NoWrap" Text="Volume Control" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="84" Background="#FFE5E5E5"/>
-                    <Button x:Name="mute" Content="Mute" Uid="909" Margin="20,80,0,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Left" Width="40" IsEnabled="False"/>
-                    <Button x:Name="voldown" Content="Down" Uid="908" Margin="65,80,0,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Left" Width="40" IsEnabled="False"/>
-                    <Button x:Name="volup" Content="Up" Uid="907" Margin="110,80,0,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Left" Width="40" IsEnabled="False"/>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="170,70,175,0" VerticalAlignment="Top" Opacity="0.3"/>
-                    <TextBlock x:Name="mpcOnTop" Margin="180,61,0,0" TextWrapping="NoWrap" Text="Toggle On Top Options" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="124" Background="#FFE5E5E5"/>
-                    <Button x:Name="always" Content="Always" Uid="884" HorizontalAlignment="Left" Margin="180,80,0,0" VerticalAlignment="Top" Width="50" Click="mpcControls_Click" IsEnabled="False"/>
-                    <Button x:Name="whileplaying" Content="While Playing Videos" Uid="886" Margin="235,80,185,0" VerticalAlignment="Top" Click="mpcControls_Click" IsEnabled="False"/>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,70,10,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="155"/>
-                    <TextBlock x:Name="toggle" Margin="0,61,74,0" TextWrapping="NoWrap" Text="Toggle Options" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Right" Width="81" Background="#FFE5E5E5"/>
-                    <Button x:Name="fullscreen" Content="Fullscreen" Uid="830" Margin="0,80,90,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="65" IsEnabled="False"/>
-                    <Button x:Name="playlist" Content="Playlist" Uid="824" Margin="0,80,20,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="65" IsEnabled="False"/>
 
-                    <Border BorderBrush="Black" BorderThickness="1" Height="89" Margin="10,121,0,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Left" Width="217"/>
-                    <TextBlock x:Name="dvd" Margin="20,112,0,0" TextWrapping="NoWrap" Text="DVD Controls" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="72" Background="#FFE5E5E5"/>
-                    <Button x:Name="dvdleft" Uid="929" Margin="20,156,0,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Left" Width="20">
-                        <Polygon Stretch="None"  Fill="Black" Points="0,5 6,0 6,2 10,2 10,8 6,8 6,10 0,5">
-                        </Polygon>
-                    </Button>
-                    <Button x:Name="dvdup" Uid="931" Margin="45,131,0,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Left" Width="26">
-                        <Polygon Stretch="None"  Fill="Black" Points="0,6 5,0 10,6 8,6 8,10 2,10 2,6 0,6">
-                        </Polygon>
-                    </Button>
-                    <Button x:Name="dvdright" Uid="930" Margin="76,156,0,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Left" Width="20">
-                        <Polygon Stretch="None"  Fill="Black" Points="0,2 4,2 4,0 10,5 4,10 4,8 0,8 0,2">
-                        </Polygon>
-                    </Button>
-                    <Button x:Name="dvddown" Uid="932" Margin="45,181,0,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Left" Width="26">
-                        <Polygon Stretch="None"  Fill="Black" Points="2,0 8,0 8,4 10,4 5,10 0,4 2,4 2,0">
-                        </Polygon>
-                    </Button>
-                    <Button x:Name="dvdback" Uid="934" Margin="20,181,0,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Left" Width="20">
-                        <Polygon Stretch="None"  Fill="Black" Points="0,5 6,0 6,10 0,5">
-                        </Polygon>
-                    </Button>
-                    <Button x:Name="dvdok" Uid="933" Content="OK" FontWeight="Bold" Margin="45,156,0,0" VerticalAlignment="Top" Click="mpcControls_Click" Height="20" IsEnabled="False" HorizontalAlignment="Left" Width="26"/>
-                    <Button x:Name="dvdtitle" Content="Title" Uid="923" Margin="101,131,0,0" Click="mpcControls_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="55" IsEnabled="False"/>
-                    <Button x:Name="dvdroot" Content="Root" Uid="924" Margin="101,156,0,0" Click="mpcControls_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="55" IsEnabled="False"/>
-                    <Button x:Name="dvdchapter" Content="Chapter" Uid="928" Margin="101,181,0,0" Click="mpcControls_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="55" IsEnabled="False"/>
-                    <Button x:Name="dvdangle" Content="Angle" Uid="927" Margin="161,131,0,0" Click="mpcControls_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="55" IsEnabled="False"/>
-                    <Button x:Name="dvdaudio" Content="Audio" Uid="926" Margin="161,156,0,0" Click="mpcControls_Click" VerticalAlignment="Top" IsEnabled="False" HorizontalAlignment="Left" Width="55"/>
-                    <Button x:Name="dvdsubtitle" Content="Subtitle" Uid="925" Margin="161,181,0,0" Click="mpcControls_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="55" IsEnabled="False"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="10,141,0,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Left" Width="155"/>
+                    <TextBlock x:Name="audio" Margin="20,132,0,0" TextWrapping="NoWrap" Text="Audio Tracks" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Left" Width="67"/>
+                    <Button x:Name="audioprev" Content="Previous" Uid="953" HorizontalAlignment="Left" Margin="20,150,0,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
+                    <Button x:Name="audionext" Content="Next" Uid="952" HorizontalAlignment="Left" Margin="90,150,0,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
 
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,121,9.667,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="155"/>
-                    <TextBlock x:Name="audio" Margin="0,112,88,0" TextWrapping="NoWrap" Text="Audio Tracks" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="67"/>
-                    <Button x:Name="audioprev" Content="Previous" Uid="953" HorizontalAlignment="Right" Margin="0,130,90,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
-                    <Button x:Name="audionext" Content="Next" Uid="952" HorizontalAlignment="Right" Margin="0,130,20,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
+                    <Button x:Name="panic" Content="Panic Button" Uid="944" Margin="175,141,176,0" FontSize="14" Click="mpcControls_Click" IsEnabled="False" Height="40" VerticalAlignment="Top"/>
+
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,141,10,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="155"/>
+                    <TextBlock x:Name="stopAfter" Margin="0,132,101,0" TextWrapping="NoWrap" Text="Stop After" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="54"/>
+                    <Button x:Name="playAll" Content="All" Uid="33451" Margin="0,151,105,0" VerticalAlignment="Top" Click="mpcControls_Click" IsEnabled="False" HorizontalAlignment="Right" Width="50"/>
+                    <Button x:Name="playOne" Content="Current" Uid="33450" Margin="0,151,20,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="80" IsEnabled="False"/>
+
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="10,192,0,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Left" Width="155"/>
+                    <TextBlock x:Name="subtitles" Margin="20,183,0,0" TextWrapping="NoWrap" Text="Subtitle Tracks" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Left" Width="76"/>
+                    <Button x:Name="subprev" Content="Previous" Uid="955" HorizontalAlignment="Left" Margin="20,201,0,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
+                    <Button x:Name="subnext" Content="Next" Uid="954" HorizontalAlignment="Left" Margin="90,201,0,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
 
 
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,172,10,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="155"/>
-                    <TextBlock x:Name="subtitles" Margin="0,163,79,0" TextWrapping="NoWrap" Text="Subtitle Tracks" VerticalAlignment="Top" FontSize="12" Background="#FFE5E5E5" HorizontalAlignment="Right" Width="76"/>
-                    <Button x:Name="subprev" Content="Previous" Uid="955" HorizontalAlignment="Right" Margin="0,181,90,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
-                    <Button x:Name="subnext" Content="Next" Uid="954" HorizontalAlignment="Right" Margin="0,181,20,0" Width="65" Click="mpcControls_Click" Height="20" VerticalAlignment="Top" IsEnabled="False"/>
-
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="175,192,176,0" VerticalAlignment="Top" Opacity="0.3"/>
+                    <TextBlock x:Name="mpcOnTop" Margin="185,183,0,0" TextWrapping="NoWrap" Text="Toggle On Top Options" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="124" Background="#FFE5E5E5"/>
+                    <Button x:Name="always" Content="Always" Uid="884" HorizontalAlignment="Left" Margin="185,202,0,0" VerticalAlignment="Top" Width="50" Click="mpcControls_Click" IsEnabled="False"/>
+                    <Button x:Name="whileplaying" Content="While Playing Videos" Uid="886" Margin="240,202,186,0" VerticalAlignment="Top" Click="mpcControls_Click" IsEnabled="False"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="0,192,10,0" VerticalAlignment="Top" Opacity="0.3" HorizontalAlignment="Right" Width="155"/>
+                    <TextBlock x:Name="toggle" Margin="0,183,74,0" TextWrapping="NoWrap" Text="Toggle Options" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Right" Width="81" Background="#FFE5E5E5"/>
+                    <Button x:Name="fullscreen" Content="Fullscreen" Uid="830" Margin="0,202,90,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="65" IsEnabled="False"/>
+                    <Button x:Name="playlist" Content="Playlist" Uid="824" Margin="0,202,20,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="65" IsEnabled="False"/>
 
 
                     <TextBlock x:Name="IPAddress" HorizontalAlignment="Left" Margin="12,0,0,12" TextWrapping="Wrap" Text="No Network Connection Found" Height="16" VerticalAlignment="Bottom"/>
-                    <Button x:Name="panic" Content="Panic Button" Uid="944" Margin="257,131,197,0" FontSize="14" Click="mpcControls_Click" IsEnabled="False" Height="70" VerticalAlignment="Top"/>
                     <Button x:Name="webcontrols" Content="Web Controls" Margin="0,0,105,10" IsEnabled="False" Click="webcontrols_Click" HorizontalAlignment="Right" Width="85" Height="20" VerticalAlignment="Bottom"/>
                     <Button x:Name="mpchc" Content="Run MPC-HC" Margin="0,0,10,10" IsEnabled="False" HorizontalAlignment="Right" Width="90" Height="20" VerticalAlignment="Bottom" Click="mpchc_Click"/>
                 </Grid>
@@ -169,9 +161,12 @@
                     <TextBox x:Name="upcoming2" Margin="122,192,0,0" Text="Panel Name Here" Height="23" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsEnabled="{Binding IsChecked, ElementName=showNextPanel}" HorizontalAlignment="Left" Width="252"/>
                     <TextBox x:Name="upcoming2Size" Margin="382,192,0,0" Width="34" Height="23" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" HorizontalAlignment="Left" />
                     <ComboBox x:Name="upcoming2Font" Margin="424,192,10,0" Height="23" VerticalAlignment="Top"/>
-                    <Button x:Name="updateInfo" Margin="0,0,10,10" Content="Update" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="60" Height="20" Click="updateInfo_Click" IsEnabled="False" />
+                    <Button x:Name="updateInfo" Margin="0,0,10,10" Content="Update" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="60" Height="20" Click="updateInfo_Click" IsEnabled="False"/>
+                    <ComboBox x:Name="infoScreenSelection" HorizontalAlignment="Left" Margin="10,0,0,9" Width="107" Height="22" VerticalAlignment="Bottom" SelectionChanged="infoScreenSelection_SelectionChanged" IsEnabled="False"/>
+                    <Button x:Name="showInfo" Content="Show" HorizontalAlignment="Left" Margin="122,0,0,10" Width="50" Click="showInfo_Click" Height="20" VerticalAlignment="Bottom" IsEnabled="False"/>
                 </Grid>
             </TabItem>
+
             <TabItem Header="Settings">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -186,23 +181,23 @@
                     <TextBlock x:Name="mpcPort" HorizontalAlignment="Left" Margin="342,30,0,0" TextWrapping="Wrap" Text="Port:" VerticalAlignment="Top" FontSize="12" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown"/>
                     <TextBox x:Name="mpcWebPort" Height="23" Margin="371,28,125,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown"/>
                     <Button x:Name="mpcSettings" Content="Change Settings" IsEnabled="False" Margin="0,29,20,0" VerticalAlignment="Top" Click="mpcSettigns_Click" Height="20" HorizontalAlignment="Right" Width="100"/>
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,71,10,0" Opacity="0.3" Height="140" VerticalAlignment="Top"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,71,10,44" Opacity="0.3"/>
                     <TextBlock x:Name="StylingOptions" Margin="20,62,0,0" TextWrapping="NoWrap" Text="Custom Site Styling" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="103" Background="#FFE5E5E5"/>
                     <TextBlock x:Name="fontTitle" Margin="22,79,0,0" TextWrapping="Wrap" Text="Font List" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92"/>
-                    <ListBox x:Name="fontList" Margin="20,95,0,0" HorizontalAlignment="Left" Width="150" Height="80" VerticalAlignment="Top"/>
-                    <Button x:Name="addFonts" Content="Add" HorizontalAlignment="Left" Margin="20,182,0,0" Width="55" Click="addFonts_Click" IsEnabled="False" Height="20" VerticalAlignment="Top"/>
-                    <Button x:Name="removeFonts" Content="Remove" HorizontalAlignment="Left" Margin="95,182,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="removeFonts_Click"/>
+                    <ListBox x:Name="fontList" Margin="20,95,0,80" HorizontalAlignment="Left" Width="150"/>
+                    <Button x:Name="addFonts" Content="Add" HorizontalAlignment="Left" Margin="20,0,0,55" Width="55" Click="addFonts_Click" IsEnabled="False" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="removeFonts" Content="Remove" HorizontalAlignment="Left" Margin="95,0,0,55" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="removeFonts_Click"/>
                     <TextBlock x:Name="logoTitle" Margin="187,77,0,0" TextWrapping="Wrap" Text="Logo List" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92"/>
-                    <ListBox x:Name="logoList" Margin="185,95,0,0" HorizontalAlignment="Left" Width="150" Height="80" VerticalAlignment="Top"/>
-                    <Button x:Name="addLogos" Content="Add" HorizontalAlignment="Left" Margin="185,182,0,0" VerticalAlignment="Top" Width="55" IsEnabled="False" Click="addLogos_Click"/>
-                    <Button x:Name="removeLogos" Content="Remove" HorizontalAlignment="Left" Margin="260,182,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="removeLogos_Click"/>
+                    <ListBox x:Name="logoList" Margin="185,95,0,80" HorizontalAlignment="Left" Width="150"/>
+                    <Button x:Name="addLogos" Content="Add" HorizontalAlignment="Left" Margin="185,0,0,55" VerticalAlignment="Bottom" Width="55" IsEnabled="False" Click="addLogos_Click"/>
+                    <Button x:Name="removeLogos" Content="Remove" HorizontalAlignment="Left" Margin="260,0,0,55" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="removeLogos_Click"/>
                     <TextBlock x:Name="cssBGcolorText" Margin="347,98,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Background:" VerticalAlignment="Top" FontSize="12"/>
                     <TextBox x:Name="cssBGcolor" FontSize="14" Height="23" Margin="419,95,20,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                     <TextBlock x:Name="cssTextColorText" Margin="347,126,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Text Color:" VerticalAlignment="Top" FontSize="12"/>
                     <TextBox x:Name="cssTextColor" FontSize="14" Height="23" Margin="419,123,20,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                     <TextBlock x:Name="cssTextSizeText" Margin="347,155,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Text Size:" VerticalAlignment="Top" FontSize="12"/>
                     <TextBox x:Name="cssTextSize" HorizontalAlignment="Left" FontSize="14" Height="23" Margin="419,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="34" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown"/>
-                    <Button x:Name="updateInfoPage" Content="Update" Margin="0,181,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" IsEnabled="False" Click="updateInfoPage_Click"/>
+                    <Button x:Name="updateInfoPage" Content="Update" Margin="0,0,20,56" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" IsEnabled="False" Click="updateInfoPage_Click"/>
                     <CheckBox x:Name="alwaysOnTop" Content="Always On Top" HorizontalAlignment="Left" Margin="10,0,0,10" Checked="alwaysOnTop_Checked" Unchecked="alwaysOnTop_UnChecked" Height="15" VerticalAlignment="Bottom"/>
                     <Button x:Name="webserver" Content="Enable Web Server" Margin="0,0,100,10" IsEnabled="False" HorizontalAlignment="Right" Width="115" Height="20" VerticalAlignment="Bottom" Click="webserver_Click"/>
                     <Button x:Name="generateSite" Content="Generate Site" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="85" Height="20" Click="generateSite_Click"/>

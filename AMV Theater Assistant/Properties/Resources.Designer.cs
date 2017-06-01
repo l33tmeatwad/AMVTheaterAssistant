@@ -93,13 +93,14 @@ namespace AMVTheaterAssistant.Properties {
         ///&lt;html lang=&quot;en&quot;&gt;
         ///    &lt;head&gt;
         ///        &lt;meta charset=&quot;utf-8&quot;&gt;
-        ///        &lt;title&gt;AMV Theater Assistant (powered by MPC-HC WebServer)&lt;/title&gt;
-        ///        &lt;link rel=&quot;stylesheet&quot; href=&quot;default.css&quot;&gt;
+        ///        &lt;title&gt;AMV Theater Assistant&lt;/title&gt;
+        ///        &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;amvtt.css&quot;&gt;
         ///        &lt;link rel=&quot;icon&quot; href=&quot;favicon.ico&quot;&gt;
         ///    &lt;/head&gt;
         ///    &lt;body&gt;
         ///        &lt;!--[if lt IE 8]&gt;
-        ///            &lt;div class=&quot;browser-warning&quot;&gt;&lt;strong&gt;Warning!&lt;/strong&gt; You are using an &lt;strong&gt;outdated&lt;/strong&gt; browser. Please &lt;a href=&quot;http://browsehappy.com/&quot;&gt;upgrade your browser&lt;/a&gt; to improve your experi [rest of string was truncated]&quot;;.
+        ///            &lt;div class=&quot;browser-warning&quot;&gt;&lt;strong&gt;Warning!&lt;/strong&gt; You are using an &lt;strong&gt;outdated&lt;/strong&gt; browser. Please &lt;a href=&quot;http://browsehappy.com/&quot;&gt;upgrade your browser&lt;/a&gt; to improve your experience.&lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string index_html {
             get {
@@ -159,21 +160,15 @@ namespace AMVTheaterAssistant.Properties {
         ///			var videoinfo = &quot;Nothing&quot;;
         ///
         ///$.ajax({
-        ///	url: &apos;/info.html&apos;,
+        ///	url: &apos;/variables.html&apos;,
         ///	type: &apos;get&apos;,
         ///	dataType: &apos;text&apos;,
         ///	async: false,
-        ///	success: function( filename ) {
+        ///	success: function( variables ) {
         ///
-        ///	if (filename.length &gt; 0) {
-        ///	filename = filename.substring(0, filename.length-4);
-        ///	videoinfo = filename;
-        ///	}
-        ///
-        ///	} 
-        ///});
-        ///		
-        ///			var panelinfo = [rest of string was truncated]&quot;;.
+        ///		if (variables.length &gt; 0) {
+        ///		var filename = $(variables).text().split(&apos;\n&apos;);
+        ///		videoinfo = filename[10].substring(0,filename[10].length [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string panelinfo {
             get {

@@ -104,5 +104,8 @@
     <Setting Name="upcoming2SizeType" Type="System.String" Scope="User">
       <Value Profile="(Default)">Pixels</Value>
     </Setting>
+    <Setting Name="defaultInfoScreen" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

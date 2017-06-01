@@ -15,12 +15,12 @@ $.ajax({
 	type: 'get',
 	dataType: 'text',
 	async: false,
-	success: function( filename ) {
+	success: function( variables ) {
 
-	if (filename.length > 0) {
-	filename = filename.substring(0, filename.length-4);
-	videoinfo = filename;
-	}
+		if (variables.length > 0) {
+		var filename = $(variables).text().split('\n');
+		videoinfo = filename[10].substring(0,filename[10].length-4);
+		}
 
 	} 
 });

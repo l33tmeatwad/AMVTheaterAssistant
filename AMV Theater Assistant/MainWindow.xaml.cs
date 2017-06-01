@@ -8,8 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using System.Net;
-using System.Diagnostics;
-
+using System.Windows.Forms;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace AMVTheaterAssistant
 {
@@ -18,11 +19,41 @@ namespace AMVTheaterAssistant
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
+        ContentWindow showInfoScreen;
+        ContentWindow blankVideo;
         public MainWindow()
         {
             InitializeComponent();
+            SetIEemulation();
+        }
+
+        void SetIEemulation()
+        {
+            var ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
+            if (ieRegistryEmulation == null)
+            {
+                Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION");
+                ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
+            }
+            ieRegistryEmulation.SetValue(System.AppDomain.CurrentDomain.FriendlyName, "11001", RegistryValueKind.DWord);
+        }
+
+        void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            MessageBoxResult result = System.Windows.MessageBox.Show("Are you sure you want to close AMV Theater Assistant?", "AMV Theater Assistant", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                var ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
+                if (ieRegistryEmulation != null)
+                {
+                    ieRegistryEmulation.DeleteValue(System.AppDomain.CurrentDomain.FriendlyName);
+                }
+                
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -99,18 +130,8 @@ namespace AMVTheaterAssistant
                     whileplaying.IsEnabled = true;
                     fullscreen.IsEnabled = true;
                     playlist.IsEnabled = true;
-                    dvdleft.IsEnabled = true;
-                    dvdup.IsEnabled = true;
-                    dvdright.IsEnabled = true;
-                    dvddown.IsEnabled = true;
-                    dvdback.IsEnabled = true;
-                    dvdok.IsEnabled = true;
-                    dvdtitle.IsEnabled = true;
-                    dvdroot.IsEnabled = true;
-                    dvdchapter.IsEnabled = true;
-                    dvdangle.IsEnabled = true;
-                    dvdaudio.IsEnabled = true;
-                    dvdsubtitle.IsEnabled = true;
+                    playAll.IsEnabled = true;
+                    playOne.IsEnabled = true;
                     audioprev.IsEnabled = true;
                     audionext.IsEnabled = true;
                     subprev.IsEnabled = true;
@@ -118,6 +139,11 @@ namespace AMVTheaterAssistant
                     panic.IsEnabled = true;
                     mpchc.IsEnabled = true;
                     webserver.IsEnabled = true;
+                    if (Screen.AllScreens.Count() > 1)
+                    {
+                        showInfo.IsEnabled = true;
+                        infoScreenSelection.IsEnabled = true;
+                    }
                 }
 
 
@@ -187,16 +213,27 @@ namespace AMVTheaterAssistant
             foreach (var screen in System.Windows.Forms.Screen.AllScreens)
             {
                 mpcPlayback.Items.Add(screen.DeviceName.Replace(@"\\.\DISPLAY","Monitor "));
+                infoScreenSelection.Items.Add(screen.DeviceName.Replace(@"\\.\DISPLAY", "Monitor "));
             }
             int screennum = mpcPlayback.Items.IndexOf("Monitor " + Settings.Default["defaultPlayMonitor"].ToString());
-            if (screennum >= 0)
+            if (screennum > 0)
             {
                 mpcPlayback.SelectedIndex = screennum;
             }
             else
             {
                 mpcPlayback.SelectedIndex = 0;
-            }  
+            }
+
+            screennum = infoScreenSelection.Items.IndexOf("Monitor " + Settings.Default["defaultInfoScreen"].ToString());
+            if (screennum > 0)
+            {
+                infoScreenSelection.SelectedIndex = screennum;
+            }
+            else
+            {
+                infoScreenSelection.SelectedIndex = 0;
+            }
         }
 
         private void LoadLogos()
@@ -472,7 +509,15 @@ namespace AMVTheaterAssistant
             {
                 if (IsMPCrunning == true)
                 {
-                    Process.Start("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
+                    ContentWindow webControls = new ContentWindow();
+                    webControls.LoadWebsite("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
+                    webControls.Width = 860;
+                    webControls.Height = 420;
+                    webControls.Text = "Web Controls";
+                    webControls.FormClosed += webcontrols_FormClosed;
+                    webControls.Show();
+                    //Process.Start("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
+                    webcontrols.IsEnabled = false;
                 }
             }
             else
@@ -484,11 +529,16 @@ namespace AMVTheaterAssistant
 
         }
 
+        private void webcontrols_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            webcontrols.IsEnabled = true;
+        }
+
         private void mpcControls_Click(object sender, RoutedEventArgs e)
         {
             MPCHC MPC = new MPCHC();
             string command = (sender as System.Windows.Controls.Button).Uid.ToString();
-            MPC.ControlMPC(Convert.ToInt16(command));
+            MPC.ControlMPC(Convert.ToInt32(command));
         }
 
         private void webserver_Click(object sender, RoutedEventArgs e)
@@ -498,10 +548,65 @@ namespace AMVTheaterAssistant
             DoThingsExists();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void showInfo_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (showInfoScreen == null)
+            {
+                MPCHC MPC = new MPCHC();
+                bool IsMPCrunning = MPC.ControlMPC(0);
+
+                if (IsMPCrunning == true)
+                {
+                    showInfoScreen = new ContentWindow();
+                    showInfoScreen.LoadInfoScreen(infoScreenSelection.SelectedIndex);
+                    showInfoScreen.FormClosed += showInfoScreen_FormClosed;
+                    showInfoScreen.BackColor = System.Drawing.Color.Black;
+                    showInfoScreen.Opacity = 0;
+                    
+                    showInfoScreen.Show();
+                    showInfo.Content = "Hide";
+                }
+            }
+            else
+            {
+                showInfoScreen.fadeTimer(false, 100);
+            }
+        }
+        private void showInfoScreen_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            showInfoScreen = null;
+            showInfo.Content = "Show";
+        }
+        private void infoScreenSelection_SelectionChanged(object sender, EventArgs e)
+        {
+            Settings.Default["defaultInfoScreen"] = Convert.ToInt32(infoScreenSelection.Items[infoScreenSelection.SelectedIndex].ToString().Replace("Monitor ", ""));
+            Settings.Default.Save();
+        }
+
+        private void fadeVideo_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (fadeVideo.Content.ToString() == "Fade Out")
+            {
+                blankVideo = new ContentWindow();
+                blankVideo.Opacity = 0;
+                blankVideo.CoverScreen(mpcPlayback.SelectedIndex);
+                blankVideo.fadeTimer(true, int.Parse(fadeVideoTime.Text));
+                blankVideo.FormClosed += fadeVideo_FormClosed;
+                blankVideo.BackColor = System.Drawing.Color.Black;
+                blankVideo.Show();
+                fadeVideo.Content = "Fade In";
+            }
+            else
+            {
+                blankVideo.fadeTimer(false, int.Parse(fadeVideoTime.Text));
+            }
+        }
+
+        private void fadeVideo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            blankVideo = null;
+            fadeVideo.Content = "Fade Out";
         }
     }
-
 }
