@@ -94,7 +94,7 @@ namespace AMVTheaterAssistant
 
             string[] PanelInfoTXT = { PageTitle, "<div class=\"middle\"><p>", PanelInfo, Presenters + Playing + Upcoming, "</p></div>" };
             string filePath = Settings.Default["siteLocation"].ToString();
-            System.IO.File.WriteAllLines(filePath + @"\panelinfo.txt", PanelInfoTXT);
+            System.IO.File.WriteAllLines(filePath + @"\panelinfo.htm", PanelInfoTXT);
         }
         public void CreateDisplayPage(List<string> Logos)
         {

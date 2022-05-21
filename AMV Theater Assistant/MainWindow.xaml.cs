@@ -365,6 +365,7 @@ namespace AMVTheaterAssistant
 
             CreateWebsite();
             LoadFontlist();
+			updateInfoPage_Click(sender,e);
         }
 
         private void mpcSettigns_Click(object sender, RoutedEventArgs e)
@@ -425,7 +426,7 @@ namespace AMVTheaterAssistant
             Settings.Default["cssBGcolor"] = cssBGcolor.Text;
             Settings.Default["cssTextColor"] = cssTextColor.Text;
             Settings.Default["cssTextSize"] = cssTextSize.Text;
-            string panelInfo = Settings.Default["siteLocation"] + @"\panelinfo.txt";
+            string panelInfo = Settings.Default["siteLocation"] + @"\panelinfo.htm";
             string oldInfo = "";
             if (File.Exists(panelInfo) == true)
             {
