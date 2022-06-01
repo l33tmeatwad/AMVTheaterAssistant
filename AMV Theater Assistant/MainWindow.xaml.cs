@@ -365,7 +365,7 @@ namespace AMVTheaterAssistant
 
             CreateWebsite();
             LoadFontlist();
-			updateInfoPage_Click(sender,e);
+	    updateInfo_Click(sender,e);
         }
 
         private void mpcSettigns_Click(object sender, RoutedEventArgs e)
