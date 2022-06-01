@@ -19,7 +19,7 @@ $.ajax({
 
 		if (variables.length > 0) {
 		var filename = $(variables).text().split('\n');
-		videoinfo = filename[9].substring(0,filename[10].length-4);
+		videoinfo = filename[9].substring(0,filename[9].length-4);
 		}
 
 	} 
