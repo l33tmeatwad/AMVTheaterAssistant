@@ -164,9 +164,6 @@
     <None Include="Resources\index.html" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\logo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +173,7 @@
     <None Include="Resources\jquery-2.2.4.js" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logo.png" />
+    <Resource Include="Resources\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

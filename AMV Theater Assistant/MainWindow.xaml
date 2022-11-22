@@ -241,7 +241,7 @@
                     <Button x:Name="eraseFilesSettings" Content="Erase Saved Files and Settings" Margin="166,0,195,18" VerticalAlignment="Bottom" Click="eraseFilesSettings_Click"/>
                     <Button x:Name="defaultSettings" Content="Revert to Default Settings" Margin="0,0,20,18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="170" Click="defaultSettings_Click"/>
                     <TextBlock x:Name="aboutATT" HorizontalAlignment="Left" Margin="20,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="325" Height="177"><Run Text="AMV Theater Assistant"/><LineBreak/><Run Text="Version 1.0.0.0"/><LineBreak/><Run Text="Copyright &#169; 2022 l33tmeatwad"/><LineBreak/><Run Text="Built with .NET 4.6"/><LineBreak/><Run Text="www.l33tmeatwad.com"/><LineBreak/><LineBreak/><Run Text="This software is free and distributed under the MIT License."/><LineBreak/><Run/><LineBreak/><Run Text="Javascript Library Included:"/><LineBreak/><Run Text="jQuery (2.2.4) (MIT License)"/></TextBlock>
-                    <Image x:Name="logo_png" Margin="361,31,20,75" Source="logo.png" Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <Image x:Name="logo_png" Margin="361,31,20,75" Source="Resources/logo.png" Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality"/>
                 </Grid>
             </TabItem>
         </TabControl>

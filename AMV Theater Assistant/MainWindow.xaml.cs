@@ -1008,7 +1008,8 @@ namespace AMVTheaterAssistant
             {
                 if (showInfo.Content.ToString() == "Hide")
                     showInfo_Click(sender, e);
-                showInfoScreen.LoadWebsite("closeBrowser");
+                if (showInfoScreen != null)
+                    showInfoScreen.LoadWebsite("closeBrowser");
                 Website Website = new Website();
                 Website.RemoveThings(true);
                 LoadSettings();
