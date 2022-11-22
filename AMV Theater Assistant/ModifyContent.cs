@@ -15,28 +15,86 @@ namespace AMVTheaterAssistant
 {
     class Website
     {
-        public void GenerateWebsite()
+        private void ClearReadOnly(DirectoryInfo siteLocation)
+        {
+            if (siteLocation != null)
+            {
+                siteLocation.Attributes = FileAttributes.Normal;
+                foreach (FileInfo fi in siteLocation.GetFiles())
+                {
+                    fi.Attributes = FileAttributes.Normal;
+                }
+                foreach (DirectoryInfo subdirectory in siteLocation.GetDirectories())
+                {
+                    ClearReadOnly(subdirectory);
+                }
+            }
+        }
+
+        public void RemoveThings(bool removefiles)
+        {
+            var attRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\AMV Theater Assistant", true);
+            if (attRegSettings != null)
+            {
+                Registry.CurrentUser.DeleteSubKey(@"Software\AMV Theater Assistant");
+            }
+            if (Directory.Exists(Settings.Default["siteLocation"].ToString()) && removefiles == true)
+            {
+                DirectoryInfo siteLocation = new DirectoryInfo(Settings.Default["siteLocation"].ToString());
+                ClearReadOnly(siteLocation);
+                Directory.Delete(Settings.Default["siteLocation"].ToString(),true);
+            }
+        }
+
+        public void GenerateWebsite(bool overwrite)
         {
             string sitefolder = Settings.Default["siteLocation"].ToString();
+            string javafolder = sitefolder + @"\javascript";
+            string imagesfolder = sitefolder + @"\images";
+
+            DirectoryInfo siteLocation = new DirectoryInfo(sitefolder);
+            ClearReadOnly(siteLocation);
+
             if (File.Exists(sitefolder + @"\variables.html"))
             {
                 File.Delete(sitefolder + @"\variables.html");
             }
-            Directory.CreateDirectory(sitefolder + @"\fonts");
-            Directory.CreateDirectory(sitefolder + @"\logos");
-            File.WriteAllText(sitefolder + @"\index.html", Properties.Resources.index_html);
-            string javafolder = sitefolder + @"\javascript";
-            string imagesfolder = sitefolder + @"\images";
-            Directory.CreateDirectory(javafolder);
-            System.IO.File.WriteAllText(javafolder + @"\jquery-2.2.3.js", Properties.Resources.jquery_2_2_3);
-            System.IO.File.WriteAllText(javafolder + @"\panelinfo.js", Properties.Resources.panelinfo);
-            Directory.CreateDirectory(imagesfolder);
-            AddThings AddThings = new AddThings();
-            AddThings.SavePNG(Properties.Resources.logo, imagesfolder, @"\logo.png");
+
+            string[] siteFolders = { "fonts", "logos", "javascript", "images" };
+            foreach (string siteFolder in siteFolders)
+            {
+                if (!Directory.Exists(sitefolder + @"\" + siteFolder))
+                {
+                    Directory.CreateDirectory(sitefolder + @"\" + siteFolder);
+                }
+            }
+
+            if (!File.Exists(sitefolder + @"\index.html") || overwrite == true)
+            {
+                File.WriteAllText(sitefolder + @"\index.html", Properties.Resources.index_html);
+            }
+
+            if (!File.Exists(javafolder + @"\jquery-2.2.4.js") || overwrite == true)
+            {
+                System.IO.File.WriteAllText(javafolder + @"\jquery-2.2.4.js", Properties.Resources.jquery_2_2_4);
+            }
+
+            if (!File.Exists(javafolder + @"\panelinfo.js") || overwrite == true)
+            {
+                System.IO.File.WriteAllText(javafolder + @"\panelinfo.js", Properties.Resources.panelinfo);
+            }
+
+            if (!File.Exists(imagesfolder + @"\logo.png") || overwrite == true)
+            {
+                AddThings AddThings = new AddThings();
+                AddThings.SavePNG(Properties.Resources.logo, imagesfolder, @"\logo.png");
+            }
         }
 
         public void UpdatePage(string PanelInfo, bool IfPresenters, string Presenters, bool IfPlaying, string Playing, bool IfUpcoming, string Upcoming1, string Upcoming2)
         {
+            DirectoryInfo siteLocation = new DirectoryInfo(Settings.Default["siteLocation"].ToString());
+            ClearReadOnly(siteLocation);
 
             string Title1 = Settings.Default["pageTitleLine1"].ToString();
             string Title1Font = Settings.Default["title1Font"].ToString();
@@ -94,14 +152,16 @@ namespace AMVTheaterAssistant
 
             string[] PanelInfoTXT = { PageTitle, "<div class=\"middle\"><p>", PanelInfo, Presenters + Playing + Upcoming, "</p></div>" };
             string filePath = Settings.Default["siteLocation"].ToString();
-            System.IO.File.WriteAllLines(filePath + @"\panelinfo.htm", PanelInfoTXT);
+            System.IO.File.WriteAllLines(filePath + @"\panelinfo.html", PanelInfoTXT);
         }
         public void CreateDisplayPage(List<string> Logos)
         {
+            DirectoryInfo siteLocation = new DirectoryInfo(Settings.Default["siteLocation"].ToString());
+            ClearReadOnly(siteLocation);
             CreateCSS();
             List<string> displayPage = new List<string>(new string[] { "<!DOCTYPE html>", "<head>", "<title>Panel Information</title>", "" });
 
-            displayPage.AddRange(new string[] { "", "<link rel=\"stylesheet\" type=\"text/css\" href=\"amvtt.css\">", "<script type=\"text/javascript\" src=\"javascript/jquery-2.2.3.js\" ></script >", "</head><body>", "<div id=\"PanelInfo\" class=\"main\"></div>", "<script type=\"text/javascript\" src=\"javascript/panelinfo.js\"></script>" });
+            displayPage.AddRange(new string[] { "", "<link rel=\"stylesheet\" type=\"text/css\" href=\"amvtt.css\">", "<script type=\"text/javascript\" src=\"javascript/jquery-2.2.4.js\" ></script >", "</head><body>", "<div id=\"PanelInfo\" class=\"main\"></div>", "<script type=\"text/javascript\" src=\"javascript/panelinfo.js\"></script>" });
             if (Logos.Count > 0)
             {
                 displayPage.Add("<p class=\"bottom\">");
@@ -121,6 +181,7 @@ namespace AMVTheaterAssistant
             string fontDir = Settings.Default["siteLocation"].ToString() + @"\fonts";
             string customBGcolor = Settings.Default["cssBGcolor"].ToString();
             string customTextColor = Settings.Default["cssTextColor"].ToString();
+            string customTextFont = Settings.Default["cssTextFont"].ToString();
             string customTextSize = Settings.Default["cssTextSize"].ToString();
             FindThings FindThings = new FindThings();
             List<string> fontList = FindThings.FindImportedFonts(fontDir);
@@ -140,7 +201,7 @@ namespace AMVTheaterAssistant
                 if (type == "ttf") { css.Add("format('" + "truetype" + "')"); }
                 css.Add("}");
             }
-            css.AddRange(new string[] { "", "html, body {", "color: " + customTextColor + ";", "font-size: " + customTextSize + "px;", "font-family: helvetica;", "background-color: " + customBGcolor + ";", "text-align: center;", "}", "", "div.main {", "margin: 0 auto;", "height: 98%;", "width: 98%;", "position: absolute;", "display: table;", "}", "", "div.middle {", "height: 70%;", "width: 100%;", "position: relative;", "display: table;", "}", "", "div.middle p {", "display: table-cell;", "vertical-align: middle;", "text-align: center;", "}", "", "p.bottom{", "width: 99%;", "text-align: center;", "position: absolute;", "bottom: 20px;", "}", "a {", "color: " + customTextColor + ";", "}", "a.link {", "color: " + customTextColor + ";", "}", "a.visited {", "color: " + customTextColor + ";", "}" });
+            css.AddRange(new string[] { "", "html, body {", "color: " + customTextColor + ";", "font-size: " + customTextSize + "px;", "font-family: " + customTextFont + ";", "background-color: " + customBGcolor + ";", "text-align: center;", "}", "", "div.main {", "margin: 0 auto;", "height: 98%;", "width: 98%;", "position: absolute;", "display: table;", "}", "", "div.middle {", "height: 70%;", "width: 100%;", "position: relative;", "display: table;", "}", "", "div.middle p {", "display: table-cell;", "vertical-align: middle;", "text-align: center;", "}", "", "p.bottom{", "width: 99%;", "text-align: center;", "position: absolute;", "bottom: 20px;", "}", "a {", "color: " + customTextColor + ";", "}", "a.link {", "color: " + customTextColor + ";", "}", "a.visited {", "color: " + customTextColor + ";", "}" });
 
             string filePath = Settings.Default["siteLocation"].ToString();
             File.WriteAllLines(filePath + @"\amvtt.css", css);
@@ -181,13 +242,13 @@ namespace AMVTheaterAssistant
                     string[] files = FindFontsDialog.FileNames;
                     string filename;
                     string destfile;
-                    foreach (string font in files)
+                    foreach (string file in files)
                     {
-                        filename = Path.GetFileName(font);
+                        filename = Path.GetFileName(file);
                         destfile = Path.Combine(location, filename);
-                        if (font != destfile && File.Exists(destfile) != true)
+                        if (file != destfile && File.Exists(destfile) != true)
                         {
-                            File.Copy(font, destfile);
+                            File.Copy(file, destfile);
                         }
 
                     }
@@ -196,7 +257,7 @@ namespace AMVTheaterAssistant
             else
             {
 
-                MessageBox.Show("The fonts folder has been moved or deleted!", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("The folder has been moved or deleted!", "Error", MessageBoxButtons.OK);
             }
         }
 
@@ -271,19 +332,21 @@ namespace AMVTheaterAssistant
 
                     if (command > 2)
                     {
+
                         SendMessage(process.MainWindowHandle, 0x111, command, 0);
                     }
                     if (command == 2)
                     {
-                        DialogResult dialogResult = MessageBox.Show(ProcessName.ToUpper() + " needs to be restarted for changes to apply, would you like to do that now?", "Restart MPC-HC", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            string processpath = process.MainModule.FileName;
-                            process.Kill();
-                            process.WaitForExit();
-                            Process.Start(processpath);
+                        string processpath = process.MainModule.FileName;
+                        process.Kill();
+                        process.WaitForExit();
 
+                        if (DetectMPCSetting("FullscreenSeparateControls"))
+                        {
+                            var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
+                            mpcRegSettings.SetValue("FullscreenSeparateControls", "0", RegistryValueKind.DWord);
                         }
+                        Process.Start(processpath);
                     }
                     mpcrunning = true;
                 }
@@ -307,7 +370,7 @@ namespace AMVTheaterAssistant
             return mpcrunning;
         }
 
-        public bool DetectWebServer()
+        public bool DetectMPCSetting(string mpcSetting)
         {
 
             var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
@@ -315,21 +378,12 @@ namespace AMVTheaterAssistant
             if (mpcRegSettings != null)
             {
 
-                if (mpcRegSettings.GetValue("EnableWebServer") != null)
+                if (mpcRegSettings.GetValue(mpcSetting) != null)
                 {
-                    if (mpcRegSettings.GetValue("EnableWebServer").ToString() != "1")
-                    {
-                        DialogResult dialogResult = MessageBox.Show("MPC-HC web server is not enabled, would you like to do that now?", "Start MPC-HC Web Server", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            StartWebServer();
-                            mpcWebRunning = true;
-                        }
-
-                    }
-                    else
+                    if (mpcRegSettings.GetValue(mpcSetting).ToString() == "1")
                     {
                         mpcWebRunning = true;
+
                     }
                 }
 
@@ -344,9 +398,12 @@ namespace AMVTheaterAssistant
             ControlMPC(2);
         }
 
-        public void ChangeMPCSettings(string SettingsLocation, string StartFull, string WebPort, string PlaylistLocation, string PlaylistSize)
+        public void ChangeMPCSettings(string WebServer, string CustomSite, string StartFull, string ExitFull, string SiteVisibility)
         {
 
+            string SettingsLocation = @"Software\MPC-HC\MPC-HC\Settings";
+            string PlaylistLocation = @"Software\MPC-HC\MPC-HC\ToolBars\Playlist";
+            string PlaylistSize = @"Software\MPC-HC\MPC-HC\ToolBars\Playlist\State-SCBar-824";
 
             var mpcRegSettings = Registry.CurrentUser.OpenSubKey(SettingsLocation, true);
             if (mpcRegSettings == null)
@@ -354,23 +411,24 @@ namespace AMVTheaterAssistant
                 Registry.CurrentUser.CreateSubKey(SettingsLocation);
                 mpcRegSettings = Registry.CurrentUser.OpenSubKey(SettingsLocation, true);
             }
+            mpcRegSettings.SetValue("EnableWebServer", WebServer, RegistryValueKind.DWord);
+            mpcRegSettings.SetValue("WebServerLocalhostOnly", SiteVisibility, RegistryValueKind.DWord);
             mpcRegSettings.SetValue("LaunchFullScreen", StartFull, RegistryValueKind.DWord);
-            mpcRegSettings.SetValue("FullScreenMonitor", @"\\.\DISPLAY" + Settings.Default["defaultPlayMonitor"].ToString(), RegistryValueKind.String);
+            mpcRegSettings.SetValue("ExitFullscreenAtTheEnd", ExitFull, RegistryValueKind.DWord);
+            mpcRegSettings.SetValue("FullScreenMonitor", @"\\.\DISPLAY" + Settings.Default["defaultPlayMonitor"], RegistryValueKind.String);
+            mpcRegSettings.SetValue("AutoZoom", "0", RegistryValueKind.DWord);
             mpcRegSettings.SetValue("HideFullscreenControls", "1", RegistryValueKind.DWord);
             mpcRegSettings.SetValue("HideFullscreenControlsPolicy", "0", RegistryValueKind.DWord);
             mpcRegSettings.SetValue("LogoID2", "206", RegistryValueKind.DWord);
             mpcRegSettings.SetValue("ShowOSD", "0", RegistryValueKind.DWord);
+            mpcRegSettings.SetValue("RememberPlaylistItems", "1", RegistryValueKind.DWord);
 
-            if (Convert.ToBoolean(Settings.Default["mpcEnableCustom"]) == true)
-            {
+            if (CustomSite == "Custom Site")
                 mpcRegSettings.SetValue("WebRoot", Settings.Default["siteLocation"], RegistryValueKind.String);
-            }
             else
-            {
                 mpcRegSettings.SetValue("WebRoot", "*", RegistryValueKind.String);
-            }
 
-            mpcRegSettings.SetValue("WebServerPort", WebPort, RegistryValueKind.DWord);
+            mpcRegSettings.SetValue("WebServerPort", Settings.Default["mpcWebPort"].ToString(), RegistryValueKind.DWord);
 
             var mpcRegPlaylist = Registry.CurrentUser.OpenSubKey(PlaylistSize, true);
             if (mpcRegPlaylist == null)
@@ -385,6 +443,7 @@ namespace AMVTheaterAssistant
             mpcRegPlaylist.SetValue("DockPosX", "200", RegistryValueKind.DWord);
             mpcRegPlaylist.SetValue("DockPosY", "200", RegistryValueKind.DWord);
             mpcRegPlaylist.SetValue("DockState", "59423", RegistryValueKind.DWord);
+            ControlMPC(2);
         }
     }
 }

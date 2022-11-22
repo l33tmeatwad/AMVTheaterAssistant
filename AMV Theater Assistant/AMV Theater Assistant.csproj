@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AMVTheaterAssistant</RootNamespace>
     <AssemblyName>AMV Theater Assistant</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -29,6 +29,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -142,9 +143,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -154,28 +155,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\javascript.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\jquery-2.2.3.js" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\panelinfo.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\org.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\momocon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\404.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\browser.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\controls.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\default.css" />
@@ -184,28 +164,19 @@
     <None Include="Resources\index.html" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\1pix.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\slidergrip.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\vbs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\sliderback.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\vbg.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\variables.html" />
+    <Resource Include="Resources\ScreenTest.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jquery-2.2.4.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

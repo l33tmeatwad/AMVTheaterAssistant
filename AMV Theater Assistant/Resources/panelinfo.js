@@ -7,7 +7,7 @@ $(window).load(function(){
 
 	function ReloadData(){
 
-		$.get( "panelinfo.htm", function( panelinfo ) {
+		$.get( "panelinfo.html", function( panelinfo ) {
 			var videoinfo = "Nothing";
 
 $.ajax({

@@ -9,8 +9,8 @@ using System.Threading;
 using System.Windows.Input;
 using System.Net;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace AMVTheaterAssistant
 {
@@ -24,7 +24,10 @@ namespace AMVTheaterAssistant
         public MainWindow()
         {
             InitializeComponent();
+            LoadRegistrySettings();
             SetIEemulation();
+            SetIEPageUpdate();
+            DetectFullScreenControls();
         }
 
         void SetIEemulation()
@@ -35,8 +38,125 @@ namespace AMVTheaterAssistant
                 Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION");
                 ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
             }
-            ieRegistryEmulation.SetValue(System.AppDomain.CurrentDomain.FriendlyName, "11001", RegistryValueKind.DWord);
+            ieRegistryEmulation.SetValue(AppDomain.CurrentDomain.FriendlyName, "11001", RegistryValueKind.DWord);
         }
+        void SetIEPageUpdate()
+        {
+            var ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings", true);
+            if (ieRegistryEmulation != null)
+            {
+                ieRegistryEmulation.SetValue("SyncMode5", "4", RegistryValueKind.DWord);
+            }
+            
+        }
+
+        void LoadRegistrySettings()
+        {
+            var attRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\AMV Theater Assistant", true);
+            if (attRegSettings != null)
+            {
+                string[] regSettings = { "pageTitleLine1","title1Font","title1Size","enableTitleLine2","pageTitleLine2","title2Font","title2Size","panelInfoFont","panelInfoSize","presentersFont","presentersSize","videoInfoFont","videoInfoSize","upcoming1Font","upcoming1Size","upcoming2Font","upcoming2Size","alwaysOnTop","cssBGColor","cssTextColor","cssTextFont","cssTextSize","defaultPlayMonitor","defaultPlayMonitor","defaultPlayMonitor","defaultPlayMonitor","defaultInfoScreen" };
+                foreach (string regSettingName in regSettings)
+                {
+                    var regSetting = attRegSettings.GetValue(regSettingName);
+                    if (regSetting != null)
+                    {
+                        string regSettingString = regSetting.ToString();
+                        if (regSettingString == "True" || regSettingString == "False")
+                        {
+                            Settings.Default[regSettingName] = Convert.ToBoolean(regSettingString);
+                        }
+                        else
+                        {
+                            Settings.Default[regSettingName] = regSettingString;
+                        }
+                    }
+                }
+
+                
+            }
+        }
+
+        public void DetectFullScreenControls()
+        {
+
+            var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
+            if (mpcRegSettings != null)
+            {
+
+                if (mpcRegSettings.GetValue("FullscreenSeparateControls") != null)
+                {
+                    if (mpcRegSettings.GetValue("FullscreenSeparateControls").ToString() != "0")
+                    {
+                        DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Playback controls in this applicaion will not work when MPC-HC is fullscreen with Fullscreen Separate Controls enabled, it will need to be disabled in the Advanced Settings menu of MPC-HC or by using the Change Settings button in this application.", "Disable Fullscreen Separate Controls", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+            }
+        }
+
+        void SaveToRegistry()
+        {
+            var attRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\AMV Theater Assistant", true);
+            if (attRegSettings == null)
+            {
+                Registry.CurrentUser.CreateSubKey(@"Software\AMV Theater Assistant");
+                attRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\AMV Theater Assistant", true);
+            }
+            attRegSettings.SetValue("pageTitleLine1", Settings.Default["pageTitleLine1"], RegistryValueKind.String);
+            attRegSettings.SetValue("title1Font", Settings.Default["title1Font"], RegistryValueKind.String);
+            attRegSettings.SetValue("title1Size", Settings.Default["title1Size"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("enableTitleLine2", Settings.Default["enableTitleLine2"], RegistryValueKind.String);
+            attRegSettings.SetValue("pageTitleLine2", Settings.Default["pageTitleLine2"], RegistryValueKind.String);
+            attRegSettings.SetValue("title2Font", Settings.Default["title2Font"], RegistryValueKind.String);
+            attRegSettings.SetValue("title2Size", Settings.Default["title2Size"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("panelInfoFont", Settings.Default["panelInfoFont"], RegistryValueKind.String);
+            attRegSettings.SetValue("panelInfoSize", Settings.Default["panelInfoSize"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("presentersFont", Settings.Default["presentersFont"], RegistryValueKind.String);
+            attRegSettings.SetValue("presentersSize", Settings.Default["presentersSize"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("videoInfoFont", Settings.Default["videoInfoFont"], RegistryValueKind.String);
+            attRegSettings.SetValue("videoInfoSize", Settings.Default["VideoInfoSize"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("upcoming1Font", Settings.Default["upcoming1Font"], RegistryValueKind.String);
+            attRegSettings.SetValue("upcoming1Size", Settings.Default["upcoming1Size"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("upcoming2Font", Settings.Default["upcoming2Font"], RegistryValueKind.String);
+            attRegSettings.SetValue("upcoming2Size", Settings.Default["upcoming2Size"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("alwaysOnTop", Settings.Default["alwaysOnTop"], RegistryValueKind.String);
+            attRegSettings.SetValue("cssBGColor", Settings.Default["cssBGColor"], RegistryValueKind.String);
+            attRegSettings.SetValue("cssTextColor", Settings.Default["cssTextColor"], RegistryValueKind.String);
+            attRegSettings.SetValue("cssTextFont", Settings.Default["cssTextFont"], RegistryValueKind.String);
+            attRegSettings.SetValue("cssTextSize", Settings.Default["cssTextSize"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("defaultPlayMonitor", Settings.Default["defaultPlayMonitor"], RegistryValueKind.DWord);
+            attRegSettings.SetValue("defaultInfoScreen", Settings.Default["defaultInfoScreen"], RegistryValueKind.DWord);
+        }
+
+        private bool DetectMissingFiles()
+        {
+            bool generatewebsite = false;
+            string siteLocation = Settings.Default["siteLocation"].ToString();
+            string[] customsitefiles = { @"\amvtt.css", @"\display.html", @"\index.html", @"\panelinfo.html", @"\javascript\jquery-2.2.4.js", @"\javascript\panelinfo.js" };
+            string[] customsitefolders = { @"\fonts", @"\images", @"\javascript", @"\logos" };
+
+            if (!Directory.Exists(siteLocation))
+            {
+                Directory.CreateDirectory(siteLocation);
+                generatewebsite = true;
+            }
+            else
+            {
+                foreach (string folder in customsitefolders)
+                {
+                    if (!Directory.Exists(siteLocation + folder))
+                        generatewebsite = true;
+                }
+                foreach (string file in customsitefiles)
+                {
+                    if (!System.IO.File.Exists(siteLocation + file))
+                        generatewebsite = true;
+                }
+            }
+            return generatewebsite;
+        }
+
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -50,7 +170,7 @@ namespace AMVTheaterAssistant
                 var ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
                 if (ieRegistryEmulation != null)
                 {
-                    ieRegistryEmulation.DeleteValue(System.AppDomain.CurrentDomain.FriendlyName);
+                    ieRegistryEmulation.DeleteValue(AppDomain.CurrentDomain.FriendlyName);
                 }
                 
             }
@@ -58,9 +178,12 @@ namespace AMVTheaterAssistant
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Settings.Default["siteLocation"] = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\AMVTheaterAssistant";
-            Settings.Default.Save();
+            LoadSettings();
+        }
 
+        private void LoadSettings()
+        {
+            Settings.Default["siteLocation"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\AMV Theater Assistant";
             pageTitleLine1.Text = Settings.Default["pageTitleLine1"].ToString();
             title1Size.Text = Settings.Default["title1Size"].ToString();
             enableTitleLine2.IsChecked = Convert.ToBoolean(Settings.Default["enableTitleLine2"]);
@@ -71,37 +194,53 @@ namespace AMVTheaterAssistant
             videoInfoSize.Text = Settings.Default["videoInfoSize"].ToString();
             upcoming1Size.Text = Settings.Default["upcoming1Size"].ToString();
             upcoming2Size.Text = Settings.Default["upcoming2Size"].ToString();
-            cssBGcolor.Text = Settings.Default["cssBGcolor"].ToString();
-            cssTextColor.Text = Settings.Default["cssTextColor"].ToString();
             cssTextSize.Text = Settings.Default["cssTextSize"].ToString();
-            enablecustom.IsChecked = Convert.ToBoolean(Settings.Default["mpcEnableCustom"]);
-            startfull.IsChecked = Convert.ToBoolean(Settings.Default["mpcStartFull"]);
             if (Convert.ToBoolean(Settings.Default["alwaysOnTop"]) == true) { Topmost = true; alwaysOnTop.IsChecked = true; }
-
+            var brushcolor = new BrushConverter();
+            cssBGColor.Fill = (Brush)brushcolor.ConvertFrom(Settings.Default["cssBGColor"]);
+            cssTextColor.Fill = (Brush)brushcolor.ConvertFrom(Settings.Default["cssTextColor"]);
             DoThingsExists();
             LoadFontlist();
             LoadLogos();
-            MonitorCount();
         }
 
         private void DoThingsExists()
         {
+            MonitorCount();
             string siteLocation = Settings.Default["siteLocation"].ToString();
-
+            if (Directory.Exists(siteLocation))
+                openSiteFolder.IsEnabled = true;
+            else
+                openSiteFolder.IsEnabled = false;
             if (System.IO.File.Exists(siteLocation + @"\display.html"))
             {
                 updateInfo.IsEnabled = true;
-                updateInfoPage.IsEnabled = true;
+                updateSiteStyling.IsEnabled = true;
+            }
+            else
+            {
+                updateInfo.IsEnabled = false;
+                updateSiteStyling.IsEnabled = false;
             }
             if (Directory.Exists(siteLocation + @"\fonts"))
             {
                 addFonts.IsEnabled = true;
                 removeFonts.IsEnabled = true;
             }
+            else
+            {
+                addFonts.IsEnabled = false;
+                removeFonts.IsEnabled = false;
+            }
             if (Directory.Exists(siteLocation + @"\logos"))
             {
                 addLogos.IsEnabled = true;
                 removeLogos.IsEnabled = true;
+            }
+            else
+            {
+                addLogos.IsEnabled = false;
+                removeLogos.IsEnabled = false;
             }
 
             var mpcRegLocation = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC", true);
@@ -138,55 +277,77 @@ namespace AMVTheaterAssistant
                     subnext.IsEnabled = true;
                     panic.IsEnabled = true;
                     mpchc.IsEnabled = true;
-                    webserver.IsEnabled = true;
-                    if (Screen.AllScreens.Count() > 1)
-                    {
-                        showInfo.IsEnabled = true;
-                        infoScreenSelection.IsEnabled = true;
-                    }
                 }
 
+                var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
+                if (mpcRegSettings != null)
+                {
+                    MPCHC MPC = new MPCHC();
+                    bool mpcWebRunning = MPC.DetectMPCSetting("EnableWebServer");
+                    bool siteVisiblity = MPC.DetectMPCSetting("WebServerLocalhostOnly");
+                    bool backupPlaylistVisibility = MPC.DetectMPCSetting("RememberPlaylistItems");
+                    startfull.IsChecked = MPC.DetectMPCSetting("LaunchFullScreen");
+                    exitfull.IsChecked = MPC.DetectMPCSetting("ExitFullscreenAtTheEnd");
+                    backupPlaylist.IsEnabled = backupPlaylistVisibility;
+                    enablewebserver.IsChecked = mpcWebRunning;
+                    webcontrols.IsEnabled = mpcWebRunning;
 
+                    if (System.IO.File.Exists(siteLocation + @"\display.html") && mpcWebRunning && !mpcRegSettings.GetValue("WebRoot").ToString().Contains("*"))
+                    {
+                        InfoScreen.IsEnabled = true;
+                        if(Screen.AllScreens.Count() > 2)
+                        {
+                            showInfo.IsEnabled = true;
+                            infoScreenSelection.IsEnabled = true;
+                        }
+                        else
+                        {
+                            showInfo.IsEnabled = false;
+                            infoScreenSelection.IsEnabled = false;
+                        }
+                        
+                    }
+                    else
+                    {
+                        InfoScreen.IsEnabled = false;
+                        showInfo.IsEnabled = false;
+                        infoScreenSelection.IsEnabled = false;
+                    }
 
-
-
-
-            MPCHC MPC = new MPCHC();
-            bool mpcWebRunning = MPC.DetectWebServer();
-            if (mpcWebRunning == true)
-            {
-                webcontrols.IsEnabled = true;
-                webserver.IsEnabled = false;
+                    string mpcPort = Settings.Default["mpcWebPort"].ToString();
+                    if (mpcRegSettings.GetValue("WebServerPort") != null)
+                    {
+                        mpcPort = mpcRegSettings.GetValue("WebServerPort").ToString();
+                        mpcWebPort.Text = mpcPort;
+                    }
+                    else
+                    {
+                        mpcWebPort.Text = mpcPort;
+                    }
+                    if (mpcWebRunning == true)
+                    {
+                        FindNetworkAddress(mpcPort);
+                    }
+                    else
+                    {
+                        IPAddress.Text = "MPC Web Server Not Enabled";
+                    }
+                    if (mpcRegSettings.GetValue("WebRoot").ToString().Contains("*"))
+                        mpcSiteType.SelectedIndex = 0;
+                    else
+                        mpcSiteType.SelectedIndex = 1;
+                    if (siteVisiblity)
+                        mpcSiteVisibility.SelectedIndex = 0;
+                    else
+                        mpcSiteVisibility.SelectedIndex = 1;
+                    setRecommended.IsEnabled = true;
+                    mpcSettings.IsEnabled = true;
+                }
+                else
+                {
+                    IPAddress.Text = "MPC-HC Not Detected";
+                }
             }
-
-            var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
-            string mpcPort = Settings.Default["mpcWebPort"].ToString();
-            if (mpcRegSettings.GetValue("WebServerPort") != null)
-            {
-                mpcPort = mpcRegSettings.GetValue("WebServerPort").ToString();
-                mpcWebPort.Text = mpcPort;
-                mpcSettings.IsEnabled = true;
-            }
-            else
-            {
-                mpcWebPort.Text = mpcPort;
-            }
-            if (mpcWebRunning == true)
-            {
-                FindNetworkAddress(mpcPort);
-            }
-            else
-            {
-                IPAddress.Text = "MPC Web Server Not Enabled";
-            }
-            mpcSettings.IsEnabled = true;
-
-            }
-            else
-            {
-                IPAddress.Text = "MPC-HC Not Detected";
-            }
-
         }
 
 
@@ -200,35 +361,66 @@ namespace AMVTheaterAssistant
             {
                 if (ipa.AddressFamily.ToString() == "InterNetwork") ip = ipa.ToString();
             }
-
-            if (ip != "127.0.0.1")
+           
+            var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
+            if (mpcRegSettings != null)
             {
-                string ServerAddress = ip + ":" + mpcPort;
-                IPAddress.Text = "MPC-HC Server Address: http://" + ServerAddress;
+                MPCHC MPC = new MPCHC();
+                if (MPC.DetectMPCSetting("WebServerLocalhostOnly") || ip == "127.0.0.1")
+                    ip = "localhost";
             }
+
+            string ServerAddress = ip + ":" + mpcPort;
+            IPAddress.Text = "Website: http://" + ServerAddress;
         }
 
         private void MonitorCount()
         {
+            mpcPlayback.Items.Clear();
+            infoScreenSelection.Items.Clear();
             foreach (var screen in System.Windows.Forms.Screen.AllScreens)
             {
                 mpcPlayback.Items.Add(screen.DeviceName.Replace(@"\\.\DISPLAY","Monitor "));
                 infoScreenSelection.Items.Add(screen.DeviceName.Replace(@"\\.\DISPLAY", "Monitor "));
             }
-            int screennum = mpcPlayback.Items.IndexOf("Monitor " + Settings.Default["defaultPlayMonitor"].ToString());
-            if (screennum > 0)
+            int playscreennum = mpcPlayback.Items.IndexOf("Monitor " + Settings.Default["defaultPlayMonitor"]);
+            var mpcRegSettings = Registry.CurrentUser.OpenSubKey(@"Software\MPC-HC\MPC-HC\Settings", true);
+            if (mpcRegSettings != null)
             {
-                mpcPlayback.SelectedIndex = screennum;
+                string test = mpcRegSettings.GetValue("FullScreenMonitor").ToString();
+                if (mpcRegSettings.GetValue("FullScreenMonitor") != null && mpcRegSettings.GetValue("FullScreenMonitor").ToString() != "")
+                    playscreennum = mpcPlayback.Items.IndexOf(mpcRegSettings.GetValue("FullScreenMonitor").ToString().Replace(@"\\.\DISPLAY", "Monitor "));
+            }
+
+
+            if (playscreennum > 0)
+            {
+                mpcPlayback.SelectedIndex = playscreennum;
             }
             else
             {
                 mpcPlayback.SelectedIndex = 0;
             }
 
-            screennum = infoScreenSelection.Items.IndexOf("Monitor " + Settings.Default["defaultInfoScreen"].ToString());
-            if (screennum > 0)
+            int infoscreennum = infoScreenSelection.Items.IndexOf("Monitor " + Settings.Default["defaultInfoScreen"].ToString());
+
+            if (playscreennum == infoscreennum)
             {
-                infoScreenSelection.SelectedIndex = screennum;
+                if (playscreennum < Screen.AllScreens.Count() - 1)
+                    infoscreennum = playscreennum + 1;
+                else
+                {
+                    if (playscreennum > 0)
+                        infoscreennum = playscreennum - 1;
+                    else
+                        infoscreennum = 0;
+                }
+
+            }
+
+            if (infoscreennum > 0)
+            {
+                infoScreenSelection.SelectedIndex = infoscreennum;
             }
             else
             {
@@ -276,6 +468,7 @@ namespace AMVTheaterAssistant
             videoInfoFont.Items.Clear();
             upcoming1Font.Items.Clear();
             upcoming2Font.Items.Clear();
+            cssFontSelection.Items.Clear();
 
 
             FontList.Sort();
@@ -288,6 +481,7 @@ namespace AMVTheaterAssistant
                 videoInfoFont.Items.Add(FontList[i]);
                 upcoming1Font.Items.Add(FontList[i]);
                 upcoming2Font.Items.Add(FontList[i]);
+                cssFontSelection.Items.Add(FontList[i]);
             }
             title1Font.SelectedIndex = FontList.FindIndex(x => x.Equals(Settings.Default["title1Font"].ToString()));
             if (title1Font.SelectedIndex < 0) { title1Font.SelectedIndex = FontList.FindIndex(x => x.Equals("Helvetica")); }
@@ -309,18 +503,41 @@ namespace AMVTheaterAssistant
 
             upcoming2Font.SelectedIndex = FontList.FindIndex(x => x.Equals(Settings.Default["upcoming2Font"].ToString()));
             if (upcoming2Font.SelectedIndex < 0) { upcoming2Font.SelectedIndex = FontList.FindIndex(x => x.Equals("Helvetica")); }
+
+            cssFontSelection.SelectedIndex = FontList.FindIndex(x => x.Equals(Settings.Default["cssTextFont"].ToString()));
+            if (cssFontSelection.SelectedIndex < 0) { cssFontSelection.SelectedIndex = FontList.FindIndex(x => x.Equals("Helvetica")); }
         }
 
-        private void CreateWebsite()
+        private void CreateWebsite(bool overwrite, bool updateinfo)
         {
             Website Website = new Website();
-            Website.GenerateWebsite();
+            Website.GenerateWebsite(overwrite);
+            LoadFontlist();
             var Logos = logoList.Items.Cast<String>().ToList();
-            Website.CreateDisplayPage(Logos);
+            if (!File.Exists(Settings.Default["siteLocation"] + @"\display.html") || overwrite)
+                Website.CreateDisplayPage(Logos);
+            if (!File.Exists(Settings.Default["siteLocation"] + @"\panelinfo.html") || updateinfo)
+            {
+                updateInfoPage();
+            }
             DoThingsExists();
         }
 
         private void updateInfo_Click(object sender, RoutedEventArgs e)
+        {
+            SaveUserValues();
+            bool generatewebsite = DetectMissingFiles();
+            if (generatewebsite)
+            {
+                CreateWebsite(false, true);
+            }
+            else
+            {
+                updateInfoPage();
+            }
+        }
+
+        private void updateInfoPage()
         {
             string PanelInfo = panelInfo.Text;
             bool IfPresenters = Convert.ToBoolean(presentedBy.IsChecked);
@@ -331,9 +548,14 @@ namespace AMVTheaterAssistant
             string Upcoming1 = upcoming1.Text;
             string Upcoming2 = upcoming2.Text;
 
-            SaveUserValues();
+
             Website Website = new Website();
             Website.UpdatePage(PanelInfo, IfPresenters, Presenters, IfPlaying, Playing, IfUpcoming, Upcoming1, Upcoming2);
+        }
+
+        private void internetOptions_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("InetCpl.Cpl");
         }
 
         private void addFonts_Click(object sender, RoutedEventArgs e)
@@ -356,39 +578,51 @@ namespace AMVTheaterAssistant
             LoadLogos();
         }
 
-        private void generateSite_Click(object sender, RoutedEventArgs e)
-        {
-            if (!Directory.Exists(Settings.Default["siteLocation"].ToString()))
-            {
-                Directory.CreateDirectory(Settings.Default["siteLocation"].ToString());
-            }
-
-            CreateWebsite();
-            LoadFontlist();
-	    updateInfo_Click(sender,e);
-        }
-
         private void mpcSettigns_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default["defaultPlayMonitor"] = Convert.ToInt32(mpcPlayback.Items[mpcPlayback.SelectedIndex].ToString().Replace("Monitor ",""));
-            Settings.Default["mpcStartFull"] = startfull.IsChecked;
-            Settings.Default["mpcEnableCustom"] = enablecustom.IsChecked;
-            if (mpcWebPort.Text != "") { Settings.Default["mpcWebPort"] = mpcWebPort.Text; }
-            Settings.Default.Save();
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("This will apply changes to MPC-HC settings and restart all instances of the application if it is currently open, would you like to continue?", "Apply Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                if (mpcSiteType.Text == "Built-In Site" || enablewebserver.IsChecked == false)
+                {
+                    if (showInfo.Content.ToString() == "Hide")
+                    {
+                        showInfoScreen.LoadWebsite("closeBrowser");
+                        showInfo_Click(sender, e);
+                    }
 
-            string StartFull = "0";
-            string WebPort = Settings.Default["mpcWebPort"].ToString();
-            mpcWebPort.Text = WebPort;
-            string mpcSettingsLocation = @"Software\MPC-HC\MPC-HC\Settings";
-            string mpcPlaylistLocation = @"Software\MPC-HC\MPC-HC\ToolBars\Playlist";
-            string mpcPlaylistSize = @"Software\MPC-HC\MPC-HC\ToolBars\Playlist\State-SCBar-824";
-            if (startfull.IsChecked == true) { StartFull = "1"; }
+                }
+                saveMonitorDefaults();
+                if (mpcWebPort.Text != "") { Settings.Default["mpcWebPort"] = mpcWebPort.Text; }
 
-            MPCHC MPCSettings = new MPCHC();
-            MPCSettings.ChangeMPCSettings(mpcSettingsLocation, StartFull, WebPort, mpcPlaylistLocation, mpcPlaylistSize);
+                string WebServer = "0";
+                string CustomSite = mpcSiteType.Text;
+                string StartFull = "0";
+                string ExitFull = "0";
+                mpcWebPort.Text = Settings.Default["mpcWebPort"].ToString();
+                string SiteVisibility = "0";
+                if (enablewebserver.IsChecked == true) { WebServer = "1"; }
+                if (startfull.IsChecked == true) { StartFull = "1"; }
+                if (exitfull.IsChecked == true) { ExitFull = "1"; }
+                if (mpcSiteVisibility.Text == "Localhost") { SiteVisibility = "1"; }
 
-            FindNetworkAddress(WebPort);
-            MPCSettings.ControlMPC(2);
+                MPCHC MPCSettings = new MPCHC();
+                MPCSettings.ChangeMPCSettings(WebServer, CustomSite, StartFull, ExitFull, SiteVisibility);
+
+                FindNetworkAddress(Settings.Default["mpcWebPort"].ToString());
+
+                if (enablewebserver.IsChecked == true && CustomSite == "Custom Site")
+                {
+                    bool generatewebsite = DetectMissingFiles();
+
+                    if (generatewebsite)
+                    {
+                        CreateWebsite(false, false);
+                    }
+                }
+
+                DoThingsExists();
+            }
         }
 
         private void removeLogos_Click(object sender, RoutedEventArgs e)
@@ -399,6 +633,7 @@ namespace AMVTheaterAssistant
                 string logo = Settings.Default["siteLocation"].ToString() + @"\logos\" + logoList.SelectedValue.ToString();
                 if (File.Exists(logo) == true)
                 {
+                    File.SetAttributes(logo, FileAttributes.Normal);
                     File.Delete(logo);
                 }
                 LoadLogos();
@@ -414,6 +649,7 @@ namespace AMVTheaterAssistant
                 string font = Settings.Default["siteLocation"].ToString() + @"\fonts\" + fontList.SelectedValue.ToString();
                 if (File.Exists(font) == true)
                 {
+                    File.SetAttributes(font, FileAttributes.Normal);
                     File.Delete(font);
                 }
                 LoadFontlist();
@@ -421,12 +657,20 @@ namespace AMVTheaterAssistant
             }
         }
 
-        private void updateInfoPage_Click(object sender, RoutedEventArgs e)
+        private void updateSiteStyling_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Default["cssBGcolor"] = cssBGcolor.Text;
-            Settings.Default["cssTextColor"] = cssTextColor.Text;
+            bool generatewebsite = DetectMissingFiles();
+            if (generatewebsite)
+            {
+                CreateWebsite(false, false);
+            }
+            Settings.Default["cssBGColor"] = "#" + cssBGColor.Fill.ToString().Substring(3);
+            Settings.Default["cssTextColor"] = "#" + cssTextColor.Fill.ToString().Substring(3);
+            Settings.Default["cssTextFont"] = cssFontSelection.Text;
             Settings.Default["cssTextSize"] = cssTextSize.Text;
-            string panelInfo = Settings.Default["siteLocation"] + @"\panelinfo.htm";
+            SaveToRegistry();
+
+            string panelInfo = Settings.Default["siteLocation"] + @"\panelinfo.html";
             string oldInfo = "";
             if (File.Exists(panelInfo) == true)
             {
@@ -439,6 +683,9 @@ namespace AMVTheaterAssistant
             File.WriteAllLines(panelInfo, PanelInfoTXT);
             Thread.Sleep(1500);
             File.WriteAllText(panelInfo, oldInfo);
+
+            if (showInfoScreen != null)
+                showInfoScreen.LoadWebsite("refresh");
         }
 
 
@@ -446,14 +693,14 @@ namespace AMVTheaterAssistant
         private void alwaysOnTop_Checked(object sender, RoutedEventArgs e)
         {
             Topmost = true;
-            Settings.Default["alwaysOnTop"] = true;
-            Settings.Default.Save();
+            Settings.Default["alwaysOnTop"] = Topmost;
+            SaveToRegistry();
         }
         private void alwaysOnTop_UnChecked(object sender, RoutedEventArgs e)
         {
             Topmost = false;
-            Settings.Default["alwaysOnTop"] = false;
-            Settings.Default.Save();
+            Settings.Default["alwaysOnTop"] = Topmost;
+            SaveToRegistry();
         }
 
         private void numTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -487,52 +734,12 @@ namespace AMVTheaterAssistant
             Settings.Default["presentersFont"] = presentersFont.Text;
             Settings.Default["presentersSize"] = presentersSize.Text;
             Settings.Default["videoInfoFont"] = videoInfoFont.Text;
-            Settings.Default["VideoInfoSize"] = videoInfoSize.Text;
+            Settings.Default["videoInfoSize"] = videoInfoSize.Text;
             Settings.Default["upcoming1Font"] = upcoming1Font.Text;
             Settings.Default["upcoming1Size"] = upcoming1Size.Text;
             Settings.Default["upcoming2Font"] = upcoming2Font.Text;
             Settings.Default["upcoming2Size"] = upcoming2Size.Text;
-            Settings.Default.Save();
-        }
-
-        private void mpchc_Click(object sender, RoutedEventArgs e)
-        {
-            MPCHC MPC = new MPCHC();
-            MPC.ControlMPC(1);
-        }
-
-        private void webcontrols_Click(object sender, RoutedEventArgs e)
-        {
-            MPCHC MPC = new MPCHC();
-            bool IsMPCrunning = MPC.ControlMPC(0);
-            bool WebServerEnabled = MPC.DetectWebServer();
-            if (WebServerEnabled == true)
-            {
-                if (IsMPCrunning == true)
-                {
-                    ContentWindow webControls = new ContentWindow();
-                    webControls.LoadWebsite("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
-                    webControls.Width = 860;
-                    webControls.Height = 420;
-                    webControls.Text = "Web Controls";
-                    webControls.FormClosed += webcontrols_FormClosed;
-                    webControls.Show();
-                    //Process.Start("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
-                    webcontrols.IsEnabled = false;
-                }
-            }
-            else
-            {
-                webcontrols.IsEnabled = false;
-                webserver.IsEnabled = true;
-                IPAddress.Text = "MPC Web Server Not Enabled";
-            }
-
-        }
-
-        private void webcontrols_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            webcontrols.IsEnabled = true;
+            SaveToRegistry();
         }
 
         private void mpcControls_Click(object sender, RoutedEventArgs e)
@@ -541,23 +748,103 @@ namespace AMVTheaterAssistant
             string command = (sender as System.Windows.Controls.Button).Uid.ToString();
             MPC.ControlMPC(Convert.ToInt32(command));
         }
+        private void volumeMixer_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("sndvol.exe");
+        }
 
-        private void webserver_Click(object sender, RoutedEventArgs e)
+        private void backupPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            string playlist = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MPC-HC\default.mpcpl";
+            if (System.IO.File.Exists(playlist))
+            {
+                System.Windows.Forms.SaveFileDialog saveDialog = new System.Windows.Forms.SaveFileDialog();
+                saveDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                saveDialog.Title = "Save Current Playlist Here";
+                saveDialog.Filter = "MPC-HC playlist (*.mpcpl)|*.mpcpl";
+                if (saveDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    try
+                    {
+                        File.Copy(playlist, saveDialog.FileName, true);
+                    }
+                    catch (IOException copyError)
+                    {
+                        DialogResult dialogResult = System.Windows.Forms.MessageBox.Show(copyError.Message, "Error Copying File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                MPCHC MPC = new MPCHC();
+                if (MPC.DetectMPCSetting("RememberPlaylistItems"))
+                {
+                    DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("File does not exist, try adding files to the playlist and try again.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Remember last playlist is not abled, please change that setting or use the change settings button in this appplication then try again.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+
+            }
+
+        }
+
+        private void webcontrols_Click(object sender, RoutedEventArgs e)
         {
             MPCHC MPC = new MPCHC();
-            MPC.StartWebServer();
+            bool IsMPCrunning = MPC.ControlMPC(0);
+            bool WebServerEnabled = MPC.DetectMPCSetting("EnableWebServer");
+            if (WebServerEnabled == true)
+            {
+                if (IsMPCrunning == true)
+                {
+                    ContentWindow webControlsForm = new ContentWindow();
+                    webControlsForm.LoadWebsite("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
+                    webControlsForm.Width = 860;
+                    webControlsForm.Height = 420;
+                    webControlsForm.Text = "Web Controls";
+                    webControlsForm.FormClosed += webcontrols_FormClosed;
+                    webControlsForm.Show();
+                    //Process.Start("http://localhost:" + Settings.Default["mpcWebPort"].ToString() + "/controls.html");
+                    webcontrols.IsEnabled = false;
+                }
+            }
+            else
+            {
+                webcontrols.IsEnabled = false;
+                IPAddress.Text = "MPC Web Server Not Enabled";
+            }
+
+        }
+
+        private void webcontrols_FormClosed(object sender, FormClosedEventArgs e)
+        {
             DoThingsExists();
+        }
+
+        private void mpchc_Click(object sender, RoutedEventArgs e)
+        {
+            MPCHC MPC = new MPCHC();
+            MPC.ControlMPC(1);
         }
 
         private void showInfo_Click(object sender, RoutedEventArgs e)
         {
+            bool generatewebsite = DetectMissingFiles();
+            if (generatewebsite)
+            {
+                CreateWebsite(false, false);
+            }
             if (showInfoScreen == null)
             {
                 MPCHC MPC = new MPCHC();
                 bool IsMPCrunning = MPC.ControlMPC(0);
 
-                if (IsMPCrunning == true)
+                if (IsMPCrunning == true &&  Screen.AllScreens.Count() > infoScreenSelection.SelectedIndex )
                 {
+                    saveMonitorDefaults();
                     showInfoScreen = new ContentWindow();
                     showInfoScreen.LoadInfoScreen(infoScreenSelection.SelectedIndex);
                     showInfoScreen.FormClosed += showInfoScreen_FormClosed;
@@ -566,6 +853,11 @@ namespace AMVTheaterAssistant
                     
                     showInfoScreen.Show();
                     showInfo.Content = "Hide";
+                }
+                else
+                {
+                    if (Screen.AllScreens.Count() <= infoScreenSelection.SelectedIndex)
+                        DoThingsExists();
                 }
             }
             else
@@ -578,25 +870,16 @@ namespace AMVTheaterAssistant
             showInfoScreen = null;
             showInfo.Content = "Show";
         }
-        private void infoScreenSelection_SelectionChanged(object sender, EventArgs e)
-        {
-            Settings.Default["defaultInfoScreen"] = Convert.ToInt32(infoScreenSelection.Items[infoScreenSelection.SelectedIndex].ToString().Replace("Monitor ", ""));
-            Settings.Default.Save();
-        }
 
         private void fadeVideo_Click(object sender, RoutedEventArgs e)
         {
 
             if (fadeVideo.Content.ToString() == "Fade Out")
             {
-                blankVideo = new ContentWindow();
-                blankVideo.Opacity = 0;
-                blankVideo.CoverScreen(mpcPlayback.SelectedIndex);
-                blankVideo.fadeTimer(true, int.Parse(fadeVideoTime.Text));
-                blankVideo.FormClosed += fadeVideo_FormClosed;
-                blankVideo.BackColor = System.Drawing.Color.Black;
-                blankVideo.Show();
+                MonitorCount();
                 fadeVideo.Content = "Fade In";
+                testScreen.IsEnabled = false;
+                fillScreen(mpcPlayback.SelectedIndex, int.Parse(fadeVideoTime.Text), false);
             }
             else
             {
@@ -604,10 +887,132 @@ namespace AMVTheaterAssistant
             }
         }
 
+        private void testScreen_Click(object sender, RoutedEventArgs e)
+        {
+            if (testScreen.Content.ToString() == "Test Playback Screen")
+            {
+                testScreen.Content = "Close Screen Test";
+                fadeVideo.IsEnabled = false;
+                fillScreen(mpcPlayback.SelectedIndex,500, true);
+            }
+            else
+            {
+                blankVideo.fadeTimer(false, 500);
+            }
+        }
+
+        private void fillScreen(int screen, int timer, bool displaylogo)
+        {
+            blankVideo = new ContentWindow();
+            blankVideo.Opacity = 0;
+            blankVideo.CoverScreen(screen, displaylogo);
+            blankVideo.fadeTimer(true, timer);
+            blankVideo.FormClosed += fadeVideo_FormClosed;
+            blankVideo.BackColor = System.Drawing.Color.Black;
+            blankVideo.Show();
+        }
+
         private void fadeVideo_FormClosed(object sender, FormClosedEventArgs e)
         {
             blankVideo = null;
             fadeVideo.Content = "Fade Out";
+            fadeVideo.IsEnabled = true;
+            testScreen.Content = "Test Playback Screen";
+            testScreen.IsEnabled = true;
+        }
+
+        private void openSiteFolder_Click(object sender, RoutedEventArgs e)
+        {
+            string sitefolder = Settings.Default["siteLocation"].ToString();
+            string windir = Environment.GetEnvironmentVariable("WINDIR");
+            System.Diagnostics.Process prc = new System.Diagnostics.Process();
+            prc.StartInfo.FileName = windir + @"\explorer.exe";
+            prc.StartInfo.Arguments = sitefolder;
+            prc.Start();
+            
+        }
+
+        private void setRecommended_Click(object sender, RoutedEventArgs e)
+        {
+            startfull.IsChecked = true;
+            exitfull.IsChecked = false;
+            enablewebserver.IsChecked = true;
+            mpcSiteType.SelectedIndex = 1;
+            if (Screen.AllScreens.Count() > 2)
+                mpcSiteVisibility.SelectedIndex = 0;
+            else
+                mpcSiteVisibility.SelectedIndex = 1;
+        }
+
+        private void refreshMonitors_Click(object sender, RoutedEventArgs e)
+        {
+            DoThingsExists();
+        }
+
+        private void saveMonitorDefaults()
+        {
+            Settings.Default["defaultInfoScreen"] = infoScreenSelection.Items[infoScreenSelection.SelectedIndex].ToString().Replace("Monitor ", "");
+            Settings.Default["defaultPlayMonitor"] = mpcPlayback.Items[mpcPlayback.SelectedIndex].ToString().Replace("Monitor ", "");
+            SaveToRegistry();
+        }
+
+
+        private void cssBGcolorButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorDialog BGcolor = new ColorDialog();
+            if (BGcolor.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var BGbrush = new SolidColorBrush(Color.FromRgb(BGcolor.Color.R,BGcolor.Color.G,BGcolor.Color.B));
+                cssBGColor.Fill =  BGbrush;
+                Settings.Default["cssBGcolor"] = "#" + BGcolor.Color.R.ToString("X2") + BGcolor.Color.G.ToString("X2") + BGcolor.Color.B.ToString("X2");
+            }
+        }
+
+        private void cssTextColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorDialog TextColor = new ColorDialog();
+            if (TextColor.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var BGbrush = new SolidColorBrush(Color.FromRgb(TextColor.Color.R, TextColor.Color.G, TextColor.Color.B));
+                cssTextColor.Fill = BGbrush;
+                Settings.Default["cssTextColor"] = "#" + TextColor.Color.R.ToString("X2") + TextColor.Color.G.ToString("X2") + TextColor.Color.B.ToString("X2");
+            }
+        }
+
+        private void defaultSettings_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("This will overwrite all saved setting for AMV Theater Assistant with the application defaults, would you like to continue?\n\nThis will not change any MPC-HC settings.", "Reset Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                Settings.Default.Reset();
+                SaveToRegistry();
+                LoadSettings();
+            }
+        }
+
+        private void eraseSettings_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("This will erase all saved setting for AMV Theater Assistant from your system, would you like to continue?\n\nThis will not change any MPC-HC settings.", "Erase Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                Website Website = new Website();
+                Website.RemoveThings(false);
+                LoadSettings();
+            }
+        }
+
+        private void eraseFilesSettings_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("This will erase all files and settings created by AMV Theater Assistant from your system, would you like to continue?\n\nThis will not change any MPC-HC settings.", "Erase Files & Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                if (showInfo.Content.ToString() == "Hide")
+                    showInfo_Click(sender, e);
+                showInfoScreen.LoadWebsite("closeBrowser");
+                Website Website = new Website();
+                Website.RemoveThings(true);
+                LoadSettings();
+            }
         }
     }
 }

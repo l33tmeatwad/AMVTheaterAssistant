@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AMVTheaterAssistant
@@ -13,7 +14,7 @@ namespace AMVTheaterAssistant
 
         }
 
-        public void CoverScreen(int screen)
+        public void CoverScreen(int screen, bool testscreen)
         {
             Text = "Cover Screen";
             Screen[] screens = Screen.AllScreens;
@@ -26,6 +27,19 @@ namespace AMVTheaterAssistant
             TopMost = true;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
+
+            if (testscreen == true)
+            {
+                PictureBox logo = new PictureBox();
+                Bitmap image = new Bitmap(AMVTheaterAssistant.Properties.Resources.ScreenTest);
+                logo.Width = Width;
+                logo.Height = Height;
+                logo.Dock = DockStyle.Fill;
+                logo.Image = (Image)image;
+                logo.SizeMode = PictureBoxSizeMode.Zoom;
+                this.Controls.Add(logo);
+            }
+
 
             
         }
@@ -65,16 +79,34 @@ namespace AMVTheaterAssistant
 
         public void LoadWebsite(string site)
         {
-            webBrowser1.Navigate(site);
+            if (site != "closeBrowser")
+            {
+                if (site == "refresh")
+                {
+                    webBrowser1.Refresh();
+                }
+                else
+                {
+                    webBrowser1.Navigate(site);
+                }
+            }
+            else
+            {
+                webBrowser1.Dispose();
+            }
+            
         }
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            webBrowser1.Refresh();
             webBrowser1.Visible = true;
             fadeTimer(true, 100);
         }
 
         Timer fadetimer;
         int fadems;
+
+
         public void fadeTimer(bool fadein, int ms)
         {
             fadems = ms;

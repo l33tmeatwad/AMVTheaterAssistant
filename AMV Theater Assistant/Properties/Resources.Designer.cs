@@ -19,7 +19,7 @@ namespace AMVTheaterAssistant.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -110,7 +110,7 @@ namespace AMVTheaterAssistant.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to /*!
-        /// * jQuery JavaScript Library v2.2.3
+        /// * jQuery JavaScript Library v2.2.4
         /// * http://jquery.com/
         /// *
         /// * Includes Sizzle.js
@@ -120,7 +120,7 @@ namespace AMVTheaterAssistant.Properties {
         /// * Released under the MIT license
         /// * http://jquery.org/license
         /// *
-        /// * Date: 2016-04-05T19:26Z
+        /// * Date: 2016-05-20T17:23Z
         /// */
         ///
         ///(function( global, factory ) {
@@ -130,9 +130,9 @@ namespace AMVTheaterAssistant.Properties {
         ///		// is present, execute the factory and get jQuery.
         ///		// For envi [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string jquery_2_2_3 {
+        internal static string jquery_2_2_4 {
             get {
-                return ResourceManager.GetString("jquery_2_2_3", resourceCulture);
+                return ResourceManager.GetString("jquery_2_2_4", resourceCulture);
             }
         }
         
@@ -156,7 +156,7 @@ namespace AMVTheaterAssistant.Properties {
         ///
         ///	function ReloadData(){
         ///
-        ///		$.get( &quot;panelinfo.txt&quot;, function( panelinfo ) {
+        ///		$.get( &quot;panelinfo.html&quot;, function( panelinfo ) {
         ///			var videoinfo = &quot;Nothing&quot;;
         ///
         ///$.ajax({
@@ -168,11 +168,21 @@ namespace AMVTheaterAssistant.Properties {
         ///
         ///		if (variables.length &gt; 0) {
         ///		var filename = $(variables).text().split(&apos;\n&apos;);
-        ///		videoinfo = filename[10].substring(0,filename[10].length [rest of string was truncated]&quot;;.
+        ///		videoinfo = filename[9].substring(0,filename[9].length- [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string panelinfo {
             get {
                 return ResourceManager.GetString("panelinfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ScreenTest {
+            get {
+                object obj = ResourceManager.GetObject("ScreenTest", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

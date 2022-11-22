@@ -12,8 +12,11 @@
         Title="AMV Theater Assistant" Height="340" Width="570" Loaded="Window_Loaded">
     <Grid>
         <TabControl x:Name="mainTabs" Margin="0,0,0,0">
-            <TabItem Header="MPC-HC">
+            <TabItem Header="Playback Controls">
                 <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <Border BorderBrush="Black" BorderThickness="1" Height="59" Margin="10,19,10,0" VerticalAlignment="Top" Opacity="0.3"/>
                     <TextBlock x:Name="mpcPlayer" Margin="20,10,0,0" TextWrapping="NoWrap" Text="Playback Controls" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="94" Background="#FFE5E5E5"/>
                     <Button x:Name="previous" Uid="921" HorizontalAlignment="Left" Margin="20,29,0,0" VerticalAlignment="Top" Width="65" Click="mpcControls_Click" Height="40" IsEnabled="False">
@@ -123,15 +126,18 @@
                     <TextBlock x:Name="toggle" Margin="0,183,74,0" TextWrapping="NoWrap" Text="Toggle Options" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Right" Width="81" Background="#FFE5E5E5"/>
                     <Button x:Name="fullscreen" Content="Fullscreen" Uid="830" Margin="0,202,90,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="65" IsEnabled="False"/>
                     <Button x:Name="playlist" Content="Playlist" Uid="824" Margin="0,202,20,0" VerticalAlignment="Top" Click="mpcControls_Click" HorizontalAlignment="Right" Width="65" IsEnabled="False"/>
-
-
-                    <TextBlock x:Name="IPAddress" HorizontalAlignment="Left" Margin="12,0,0,12" TextWrapping="Wrap" Text="No Network Connection Found" Height="16" VerticalAlignment="Bottom"/>
-                    <Button x:Name="webcontrols" Content="Web Controls" Margin="0,0,105,10" IsEnabled="False" Click="webcontrols_Click" HorizontalAlignment="Right" Width="85" Height="20" VerticalAlignment="Bottom"/>
-                    <Button x:Name="mpchc" Content="Run MPC-HC" Margin="0,0,10,10" IsEnabled="False" HorizontalAlignment="Right" Width="90" Height="20" VerticalAlignment="Bottom" Click="mpchc_Click"/>
+                    <Button x:Name="webcontrols" Content="Web Controls" Margin="0,0,98,10" IsEnabled="False" Click="webcontrols_Click" HorizontalAlignment="Right" Width="85" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="mpchc" Content="Run MPC-HC" Margin="0,0,10,10" IsEnabled="False" HorizontalAlignment="Right" Width="83" Height="20" VerticalAlignment="Bottom" Click="mpchc_Click"/>
+                    <CheckBox x:Name="alwaysOnTop" Content="Always On Top" HorizontalAlignment="Left" Margin="10,0,0,12" Checked="alwaysOnTop_Checked" Unchecked="alwaysOnTop_UnChecked" Height="15" VerticalAlignment="Bottom"/>
+                    <Button x:Name="volumeMixer" Content="Volume Mixer" HorizontalAlignment="Right" Margin="0,0,188,10" Width="89" Height="20" VerticalAlignment="Bottom" Click="volumeMixer_Click"/>
+                    <Button x:Name="backupPlaylist" Content="Backup Current Playlist" HorizontalAlignment="Right" Margin="0,0,282,10" Width="135" Click="backupPlaylist_Click" Height="20" VerticalAlignment="Bottom" IsEnabled="False"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Info Screen">
+            <TabItem x:Name="InfoScreen" Header="Info Screen">
                 <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <TextBlock x:Name="pageTitle" Margin="10,22,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Page Title:" VerticalAlignment="Top" FontSize="14"/>
                     <TextBlock x:Name="size" Margin="384,10,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Size" VerticalAlignment="Top" FontSize="10"/>
                     <TextBlock x:Name="font" Margin="426,10,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Font" VerticalAlignment="Top" FontSize="10"/>
@@ -161,48 +167,82 @@
                     <TextBox x:Name="upcoming2" Margin="122,192,0,0" Text="Panel Name Here" Height="23" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsEnabled="{Binding IsChecked, ElementName=showNextPanel}" HorizontalAlignment="Left" Width="252"/>
                     <TextBox x:Name="upcoming2Size" Margin="382,192,0,0" Width="34" Height="23" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" HorizontalAlignment="Left" />
                     <ComboBox x:Name="upcoming2Font" Margin="424,192,10,0" Height="23" VerticalAlignment="Top"/>
-                    <Button x:Name="updateInfo" Margin="0,0,10,10" Content="Update" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="60" Height="20" Click="updateInfo_Click" IsEnabled="False"/>
-                    <ComboBox x:Name="infoScreenSelection" HorizontalAlignment="Left" Margin="10,0,0,9" Width="107" Height="22" VerticalAlignment="Bottom" SelectionChanged="infoScreenSelection_SelectionChanged" IsEnabled="False"/>
-                    <Button x:Name="showInfo" Content="Show" HorizontalAlignment="Left" Margin="122,0,0,10" Width="50" Click="showInfo_Click" Height="20" VerticalAlignment="Bottom" IsEnabled="False"/>
+                    <Button x:Name="internetOptions" Content="Internet Options" Margin="0,0,76,10" Click="internetOptions_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="106"/>
+                    <Button x:Name="updateInfo" Margin="0,0,10,10" Content="Update" VerticalAlignment="Bottom" Height="20" Click="updateInfo_Click" IsEnabled="False" HorizontalAlignment="Right" Width="61"/>
+                    <ComboBox x:Name="infoScreenSelection" HorizontalAlignment="Left" Margin="10,0,0,9" Width="89" Height="22" VerticalAlignment="Bottom" IsEnabled="False"/>
+                    <Button x:Name="showInfo" Content="Show" HorizontalAlignment="Left" Margin="104,0,0,10" Width="57" Click="showInfo_Click" Height="20" VerticalAlignment="Bottom" IsEnabled="False"/>
+                    <TextBlock x:Name="IPAddress" HorizontalAlignment="Left" Margin="166,0,0,12" TextWrapping="Wrap" Text="MPC Web Server Not Enabled" Height="16" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
 
             <TabItem Header="Settings">
                 <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="40" Margin="10,19,10,0" VerticalAlignment="Top" Opacity="0.3"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="96" Margin="10,19,10,0" VerticalAlignment="Top" Opacity="0.3"/>
                     <TextBlock x:Name="mpchcSettings" Margin="20,10,0,0" TextWrapping="NoWrap" Text="MPC-HC Settings" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92" Background="#FFE5E5E5"/>
                     <TextBlock x:Name="mpcPlay" HorizontalAlignment="Left" Margin="20,30,0,0" TextWrapping="Wrap" Text="Playback Screen:" VerticalAlignment="Top" FontSize="12"/>
                     <ComboBox x:Name="mpcPlayback" HorizontalAlignment="Left" Margin="113,28,0,0" VerticalAlignment="Top" Width="82"/>
-                    <CheckBox x:Name="enablecustom" Content="Enable Custom Site" FontSize="11" HorizontalAlignment="Left" Margin="200,23,0,0" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="startfull" Content="Launch Files Fullscreen" FontSize="11" HorizontalAlignment="Left" Margin="200,40,0,0" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="mpcPort" HorizontalAlignment="Left" Margin="342,30,0,0" TextWrapping="Wrap" Text="Port:" VerticalAlignment="Top" FontSize="12" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown"/>
-                    <TextBox x:Name="mpcWebPort" Height="23" Margin="371,28,125,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown"/>
-                    <Button x:Name="mpcSettings" Content="Change Settings" IsEnabled="False" Margin="0,29,20,0" VerticalAlignment="Top" Click="mpcSettigns_Click" Height="20" HorizontalAlignment="Right" Width="100"/>
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,71,10,44" Opacity="0.3"/>
-                    <TextBlock x:Name="StylingOptions" Margin="20,62,0,0" TextWrapping="NoWrap" Text="Custom Site Styling" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="103" Background="#FFE5E5E5"/>
-                    <TextBlock x:Name="fontTitle" Margin="22,79,0,0" TextWrapping="Wrap" Text="Font List" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92"/>
-                    <ListBox x:Name="fontList" Margin="20,95,0,80" HorizontalAlignment="Left" Width="150"/>
-                    <Button x:Name="addFonts" Content="Add" HorizontalAlignment="Left" Margin="20,0,0,55" Width="55" Click="addFonts_Click" IsEnabled="False" Height="20" VerticalAlignment="Bottom"/>
-                    <Button x:Name="removeFonts" Content="Remove" HorizontalAlignment="Left" Margin="95,0,0,55" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="removeFonts_Click"/>
-                    <TextBlock x:Name="logoTitle" Margin="187,77,0,0" TextWrapping="Wrap" Text="Logo List" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92"/>
-                    <ListBox x:Name="logoList" Margin="185,95,0,80" HorizontalAlignment="Left" Width="150"/>
-                    <Button x:Name="addLogos" Content="Add" HorizontalAlignment="Left" Margin="185,0,0,55" VerticalAlignment="Bottom" Width="55" IsEnabled="False" Click="addLogos_Click"/>
-                    <Button x:Name="removeLogos" Content="Remove" HorizontalAlignment="Left" Margin="260,0,0,55" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="removeLogos_Click"/>
-                    <TextBlock x:Name="cssBGcolorText" Margin="347,98,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Background:" VerticalAlignment="Top" FontSize="12"/>
-                    <TextBox x:Name="cssBGcolor" FontSize="14" Height="23" Margin="419,95,20,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="cssTextColorText" Margin="347,126,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Text Color:" VerticalAlignment="Top" FontSize="12"/>
-                    <TextBox x:Name="cssTextColor" FontSize="14" Height="23" Margin="419,123,20,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="cssTextSizeText" Margin="347,155,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Text Size:" VerticalAlignment="Top" FontSize="12"/>
-                    <TextBox x:Name="cssTextSize" HorizontalAlignment="Left" FontSize="14" Height="23" Margin="419,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="34" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown"/>
-                    <Button x:Name="updateInfoPage" Content="Update" Margin="0,0,20,56" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" IsEnabled="False" Click="updateInfoPage_Click"/>
-                    <CheckBox x:Name="alwaysOnTop" Content="Always On Top" HorizontalAlignment="Left" Margin="10,0,0,10" Checked="alwaysOnTop_Checked" Unchecked="alwaysOnTop_UnChecked" Height="15" VerticalAlignment="Bottom"/>
-                    <Button x:Name="webserver" Content="Enable Web Server" Margin="0,0,100,10" IsEnabled="False" HorizontalAlignment="Right" Width="115" Height="20" VerticalAlignment="Bottom" Click="webserver_Click"/>
-                    <Button x:Name="generateSite" Content="Generate Site" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="85" Height="20" Click="generateSite_Click"/>
+                    <CheckBox x:Name="enablewebserver" Content="Enable Web Server with:" FontSize="12" HorizontalAlignment="Left" Margin="22,60,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="mpcSiteType" Margin="174,56,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="94">
+                        <ComboBoxItem Content="Built-In Site" HorizontalAlignment="Left" Width="94" IsSelected="True"/>
+                        <ComboBoxItem Content="Custom Site" HorizontalAlignment="Left" Width="94"/>
+                    </ComboBox>
+                    <CheckBox x:Name="startfull" Content="Launch Files Fullscreen" FontSize="12" Margin="0,31,207,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="140"/>
+                    <CheckBox x:Name="exitfull" Content="Exit Fullscreen After Playback" FontSize="12" Margin="0,31,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="173"/>
+                    <TextBlock x:Name="sitePort" Margin="0,59,233,0" TextWrapping="Wrap" Text="Port:" VerticalAlignment="Top" FontSize="12" TextAlignment="Right" HorizontalAlignment="Right" Width="32"/>
+                    <TextBox x:Name="mpcWebPort" Height="22" Margin="0,56,165,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown" HorizontalAlignment="Right" Width="63"/>
+                    <TextBlock x:Name="websiteVisiblity" Margin="0,59,108,0" TextWrapping="Wrap" Text="Visibility:" VerticalAlignment="Top" FontSize="12" TextAlignment="Right" HorizontalAlignment="Right" Width="52"/>
+                    <ComboBox x:Name="mpcSiteVisibility" Margin="0,56,19,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="84">
+                        <ComboBoxItem Content="Localhost" HorizontalAlignment="Left" Width="84" IsSelected="True"/>
+                        <ComboBoxItem Content="Public" HorizontalAlignment="Left" Width="84"/>
+                    </ComboBox>
+                    <Button x:Name="refreshMonitors" Content="Refresh Monitor Count" Margin="22,85,0,0" Click="refreshMonitors_Click" HorizontalAlignment="Left" Width="135" Height="22" VerticalAlignment="Top"/>
+                    <Button x:Name="testScreen" Content="Test Playback Screen" Margin="162,85,263,0" VerticalAlignment="Top" Click="testScreen_Click" Height="22"/>
+                    <Button x:Name="setRecommended" Content="Select Recommended" Margin="0,85,126,0" HorizontalAlignment="Right" Width="132" Height="22" VerticalAlignment="Top" IsEnabled="False" Click="setRecommended_Click"/>
+                    <Button x:Name="mpcSettings" Content="Change Settings" IsEnabled="False" Margin="0,85,19,0" VerticalAlignment="Top" Click="mpcSettigns_Click" HorizontalAlignment="Right" Width="102" Height="22
+                            "/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,129,10,10" Opacity="0.3"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="347,153,19,44" Opacity="0.3"/>
+                    <TextBlock x:Name="SiteOptions" Margin="20,120,0,0" TextWrapping="NoWrap" Text="Custom Site Settings" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="110" Background="#FFE5E5E5"/>
+                    <TextBlock x:Name="TextStyling" Margin="347,135,0,0" TextWrapping="NoWrap" Text="Styling" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="87"/>
+                    <TextBlock x:Name="fontTitle" Margin="22,137,0,0" TextWrapping="Wrap" Text="Font List" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92"/>
+                    <ListBox x:Name="fontList" Margin="20,153,0,44" HorizontalAlignment="Left" Width="150"/>
+                    <Button x:Name="addFonts" Content="Add" HorizontalAlignment="Left" Margin="20,0,0,19" Width="55" Click="addFonts_Click" IsEnabled="False" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="removeFonts" Content="Remove" HorizontalAlignment="Left" Margin="95,0,0,19" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="removeFonts_Click"/>
+                    <TextBlock x:Name="logoTitle" Margin="187,135,0,0" TextWrapping="Wrap" Text="Logo List" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="92"/>
+                    <ListBox x:Name="logoList" Margin="185,153,0,44" HorizontalAlignment="Left" Width="150"/>
+                    <Button x:Name="addLogos" Content="Add" HorizontalAlignment="Left" Margin="185,0,0,19" VerticalAlignment="Bottom" Width="55" IsEnabled="False" Click="addLogos_Click"/>
+                    <Button x:Name="removeLogos" Content="Remove" HorizontalAlignment="Left" Margin="260,0,0,19" VerticalAlignment="Bottom" Width="75" IsEnabled="False" Click="removeLogos_Click"/>
+                    <TextBox x:Name="cssTextSize" FontSize="14" Margin="0,173,27,0" TextWrapping="Wrap" KeyDown="numTextBox_KeyDown" PreviewKeyDown="nospace_PreviewKeyDown" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="37"/>
+                    <Button x:Name="openSiteFolder" Content="Open Site Folder" Margin="347,0,90,19" VerticalAlignment="Bottom" Click="openSiteFolder_Click" IsEnabled="False"/>
+                    <Button x:Name="updateSiteStyling" Content="Update" Margin="0,0,20,19" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="65" IsEnabled="False" Click="updateSiteStyling_Click"/>
+                    <Button x:Name="cssBGcolorButton" Content="Background" Margin="356,0,115,52" Click="cssBGcolorButton_Click" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="cssTextColorButton" Content="Text" HorizontalAlignment="Right" Margin="0,0,52,52" VerticalAlignment="Bottom" Width="33" Click="cssTextColorButton_Click"/>
+                    <Rectangle x:Name="cssBGColor" Fill="#000000" HorizontalAlignment="Right" Height="20" Margin="0,0,90,52" VerticalAlignment="Bottom" Width="20"/>
+                    <Rectangle x:Name="cssTextColor" Fill="#FFFFFF" Height="20" Margin="0,0,27,52" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="20"/>
+                    <ComboBox x:Name="cssFontSelection" Margin="356,173,69,0" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="cssFont" Margin="356,159,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Font" VerticalAlignment="Top" FontSize="10" RenderTransformOrigin="-0.582,0.701"/>
+                    <TextBlock x:Name="cssSize" Margin="0,159,47,0" HorizontalAlignment="Right" TextWrapping="NoWrap" Text="Size" FontSize="10" Height="13" VerticalAlignment="Top"/>
                 </Grid>
 
+            </TabItem>
+            <TabItem Header="About" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="54">
+                <Grid Background="#FFE5E5E5">
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,19,10,64" Opacity="0.3"/>
+                    <TextBlock x:Name="mpchcSettings_Copy" Margin="20,10,0,0" TextWrapping="NoWrap" Text="Software Information" VerticalAlignment="Top" FontSize="12" HorizontalAlignment="Left" Width="112" Background="#FFE5E5E5"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="10,0,10,10" Opacity="0.3" Height="40" VerticalAlignment="Bottom"/>
+                    <TextBlock x:Name="SiteOptions_Copy" Margin="20,0,0,43" TextWrapping="NoWrap" Text="Reset" VerticalAlignment="Bottom" FontSize="12" HorizontalAlignment="Left" Width="30" Background="#FFE5E5E5"/>
+                    <Button x:Name="eraseSettings" Content="Erase Saved Settings" HorizontalAlignment="Left" Margin="20,0,0,18" VerticalAlignment="Bottom" Width="141" Click="eraseSettings_Click"/>
+                    <Button x:Name="eraseFilesSettings" Content="Erase Saved Files and Settings" Margin="166,0,195,18" VerticalAlignment="Bottom" Click="eraseFilesSettings_Click"/>
+                    <Button x:Name="defaultSettings" Content="Revert to Default Settings" Margin="0,0,20,18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="170" Click="defaultSettings_Click"/>
+                    <TextBlock x:Name="aboutATT" HorizontalAlignment="Left" Margin="20,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="325" Height="177"><Run Text="AMV Theater Assistant"/><LineBreak/><Run Text="Version 1.0.0.0"/><LineBreak/><Run Text="Copyright &#169; 2022 l33tmeatwad"/><LineBreak/><Run Text="Built with .NET 4.6"/><LineBreak/><Run Text="www.l33tmeatwad.com"/><LineBreak/><LineBreak/><Run Text="This software is free and distributed under the MIT License."/><LineBreak/><Run/><LineBreak/><Run Text="Javascript Library Included:"/><LineBreak/><Run Text="jQuery (2.2.4) (MIT License)"/></TextBlock>
+                    <Image x:Name="logo_png" Margin="361,31,20,75" Source="logo.png" Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Grid>
             </TabItem>
         </TabControl>
 
