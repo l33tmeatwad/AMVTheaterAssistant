@@ -267,6 +267,7 @@ namespace AMVTheaterAssistant
                     volup.IsEnabled = true;
                     always.IsEnabled = true;
                     whileplaying.IsEnabled = true;
+                    repeat.IsEnabled = true;
                     fullscreen.IsEnabled = true;
                     playlist.IsEnabled = true;
                     playAll.IsEnabled = true;
