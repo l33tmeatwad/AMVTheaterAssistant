@@ -170,7 +170,8 @@ namespace AMVTheaterAssistant
                 var ieRegistryEmulation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", true);
                 if (ieRegistryEmulation != null)
                 {
-                    ieRegistryEmulation.DeleteValue(AppDomain.CurrentDomain.FriendlyName);
+                    if (ieRegistryEmulation.GetValueNames().Contains(AppDomain.CurrentDomain.FriendlyName))
+                        ieRegistryEmulation.DeleteValue(AppDomain.CurrentDomain.FriendlyName);
                 }
                 
             }
